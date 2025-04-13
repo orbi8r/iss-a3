@@ -12,7 +12,7 @@ Assignment 3, Intro to Software Systems - IIIT Hyderabad
 ### Checkpoints
 
 #### Q1: Personal Website
-- ❌ Create a personal website and host it on GitHub Pages.
+- ✅ Create a personal website and host it on GitHub Pages.
 - ❌ Add an "About Yourself" section with a paragraph.
 - ❌ Include your profile picture and local pictures from your birthplace.
 - ❌ Write about your education background, schools, and achievements.

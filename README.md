@@ -39,3 +39,7 @@ Assignment 3, Intro to Software Systems - IIIT Hyderabad
 ## Notes
 - Ensure the website is neat and user-friendly.
 - Use this README to provide accurate context for future LLMs assisting with this project.
+
+## Asset Credits
+- "Canonical Hologra Office" (https://skfb.ly/oTyAG) by Aeri is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+- "Haunt Muskie" music by C418 - Minecraft () 

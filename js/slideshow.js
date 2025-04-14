@@ -204,13 +204,13 @@ function setupEventListeners() {
         }
     });
 
-    // Add wheel/scroll event for frame navigation
+    // Add wheel/scroll event for frame navigation - restoring original behavior
     document.addEventListener("wheel", function(e) {
         if (document.getElementById("loading-screen").style.display === "none") { // Only if loading is complete
             if (e.deltaY > 0) {
-                nextImage(); // Scroll down - next frame
+                nextImage(); // Scroll down - next frame (original behavior)
             } else {
-                prevImage(); // Scroll up - previous frame
+                prevImage(); // Scroll up - previous frame (original behavior)
             }
             e.preventDefault(); // Prevent page scrolling
         }

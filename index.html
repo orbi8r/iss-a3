@@ -25,7 +25,7 @@
 			<div id="loading-text">0% Complete</div>
 		</div>
 		<!-- Version counter -->
-		<div id="version-counter">v0.4.0</div>
+		<div id="version-counter">v0.4.1</div>
 	</div>
 
 	<!-- Main application UI -->
@@ -78,12 +78,28 @@
 				</div>
 				<button id="next" class="control-button"><i class="fa-solid fa-chevron-right"></i></button>
 			</div>
+			
+			<!-- Footer section for music and copyright -->
+			<div class="footer-section">
+				<div class="music-controls">
+					<button id="music-toggle" class="music-toggle">
+						<i id="music-icon" class="fa-solid fa-music"></i>
+					</button>
+				</div>
+				<div class="copyright-info">
+					<span>Copyrights trademark</span>
+					<span>Made by Shuban 'orbi8r' Biswas</span>
+				</div>
+			</div>
 		</div>
 	</div>
 
 	<!-- Hidden video and canvas for frame extraction -->
 	<video id="source-video" src="video/WebVideo.mp4" style="display: none;" crossorigin="anonymous"></video>
 	<canvas id="hidden-canvas" style="display: none;"></canvas>
+	
+	<!-- Hidden audio element for music -->
+	<audio id="background-music" src="music/C418-HauntMuskie.mp3" loop></audio>
 
 	<!-- JavaScript files -->
 	<script type="module" src="js/main.js"></script>

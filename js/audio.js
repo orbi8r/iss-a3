@@ -1,107 +1,104 @@
-// Background music management
-let audioPlayer = null;
-let isMusicEnabled = true; // Music enabled by default
+// Audio player functionality
+let isPlaying = false;
+const audioElement = document.getElementById('background-music');
 
-// Initialize audio player with default settings
+// Initialize the audio player
 export function initAudioPlayer() {
-    // Create audio element if it doesn't exist
-    if (!audioPlayer) {
-        audioPlayer = new Audio('./music/C418-HauntMuskie.mp3');
-        audioPlayer.loop = true;
-        audioPlayer.volume = 0.5; // Set default volume to 50%
-    }
-    
-    // Start playing if music is enabled
-    if (isMusicEnabled) {
-        playAudio();
-    }
-    
-    // Set up the music toggle button in both loading screen and main UI
-    setupMusicToggle();
-}
+    // Make sure audio volume is reasonable
+    audioElement.volume = 0.5;
 
-// Play audio with user interaction requirement
-function playAudio() {
-    // Only attempt to play if music is enabled
-    if (isMusicEnabled && audioPlayer) {
-        // Use catch to handle autoplay restrictions gracefully
-        audioPlayer.play().catch(error => {
-            console.log("Audio autoplay failed:", error);
-            console.log("User interaction required before playing audio");
-        });
-    }
-}
-
-// Toggle music on/off
-export function toggleMusic() {
-    isMusicEnabled = !isMusicEnabled;
-    
-    // Update all toggle buttons
-    const toggleButtons = document.querySelectorAll('.music-toggle');
-    toggleButtons.forEach(button => {
-        updateToggleButtonUI(button);
+    // Set up music toggle button event listener
+    document.addEventListener('DOMContentLoaded', () => {
+        const musicToggle = document.getElementById('music-toggle');
+        if (musicToggle) {
+            musicToggle.addEventListener('click', toggleMusic);
+            updateMusicButtonIcon();
+        }
     });
-    
-    // Play or pause based on new state
-    if (isMusicEnabled) {
-        playAudio();
-    } else if (audioPlayer) {
-        audioPlayer.pause();
-    }
+
+    // Ensure the audio state is tracked properly
+    audioElement.addEventListener('play', () => {
+        isPlaying = true;
+        updateMusicButtonIcon();
+    });
+
+    audioElement.addEventListener('pause', () => {
+        isPlaying = false;
+        updateMusicButtonIcon();
+    });
 }
 
-// Update the UI of a music toggle button
-function updateToggleButtonUI(button) {
-    if (!button) return;
+// Toggle music playback
+export function toggleMusic() {
+    if (!audioElement) return;
     
-    // Update icon
-    const icon = button.querySelector('i');
-    if (icon) {
-        if (isMusicEnabled) {
-            icon.className = 'fas fa-volume-up';
-            button.title = 'Music On (Click to Mute)';
+    if (isPlaying) {
+        audioElement.pause();
+    } else {
+        // Create user gesture context for browsers that need it
+        const playPromise = audioElement.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.error("Audio playback was prevented:", error);
+            });
+        }
+    }
+    
+    isPlaying = !isPlaying;
+    updateMusicButtonIcon();
+}
+
+// Update the music button icon based on playing state
+function updateMusicButtonIcon() {
+    const musicIcon = document.getElementById('music-icon');
+    if (!musicIcon) return;
+    
+    if (isPlaying) {
+        musicIcon.className = 'fa-solid fa-volume-high';
+    } else {
+        musicIcon.className = 'fa-solid fa-volume-xmark';
+    }
+    
+    // Add visual cue for active state
+    const musicToggle = document.getElementById('music-toggle');
+    if (musicToggle) {
+        if (isPlaying) {
+            musicToggle.style.backgroundColor = '#4f6b8f';
+            musicToggle.style.borderColor = 'rgba(114, 137, 218, 0.5)';
+            musicToggle.style.color = 'white';
+            
+            // Add subtle pulsing animation
+            musicToggle.style.animation = 'pulse 2s infinite';
         } else {
-            icon.className = 'fas fa-volume-mute';
-            button.title = 'Music Off (Click to Unmute)';
+            musicToggle.style.backgroundColor = '#2a3142';
+            musicToggle.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+            musicToggle.style.color = '#eaeaea';
+            
+            // Remove animation
+            musicToggle.style.animation = 'none';
         }
     }
 }
 
-// Set up music toggle buttons in both loading screen and main UI
-function setupMusicToggle() {
-    // Create music toggle button for loading screen
-    const loadingScreen = document.getElementById('loading-screen');
-    if (loadingScreen) {
-        let loadingMusicToggle = loadingScreen.querySelector('.music-toggle');
-        if (!loadingMusicToggle) {
-            loadingMusicToggle = document.createElement('button');
-            loadingMusicToggle.className = 'music-toggle';
-            loadingMusicToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
-            loadingMusicToggle.title = 'Music On (Click to Mute)';
-            loadingScreen.appendChild(loadingMusicToggle);
-            
-            loadingMusicToggle.addEventListener('click', (e) => {
-                e.preventDefault();
-                toggleMusic();
-            });
+// Add this to CSS using a style element since we're defining it in JS
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(114, 137, 218, 0.7);
+        }
+        
+        70% {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 10px rgba(114, 137, 218, 0);
+        }
+        
+        100% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(114, 137, 218, 0);
         }
     }
-    
-    // Create music toggle button for main UI
-    const appContainer = document.getElementById('app-container');
-    if (appContainer) {
-        let appMusicToggle = appContainer.querySelector('.music-toggle');
-        if (!appMusicToggle) {
-            appMusicToggle = document.createElement('button');
-            appMusicToggle.className = 'music-toggle';
-            appMusicToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
-            appMusicToggle.title = 'Music On (Click to Mute)';
-            appContainer.appendChild(appMusicToggle);
-            
-            appMusicToggle.addEventListener('click', (e) => {
-                e.preventDefault();
-                toggleMusic();
-            });
-        }
-    }
-}
+`;
+document.head.appendChild(style);

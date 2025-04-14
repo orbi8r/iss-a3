@@ -88,6 +88,26 @@
     overflow-y: auto;
     overflow-x: hidden; /* Prevent horizontal scrolling in content */
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Make content within panels fit properly */
+.cv-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0; /* Important for flex children to shrink properly */
+}
+
+.cv-embed {
+    flex: 1;
+    min-height: 0; /* Allow PDF to shrink if needed */
+}
+
+.event-logs {
+    height: 100%;
+    overflow-y: auto;
 }
 
 /* For scrollbars in panels */
@@ -222,6 +242,7 @@
     flex-direction: column;
     height: 100%;
     gap: 15px;
+    min-height: 0; /* Allow container to shrink if needed */
 }
 
 .input-section, .results-section {
@@ -391,5 +412,97 @@
     .panel-header i {
         font-size: 24px;
         margin-right: 15px;
+    }
+}
+
+/* CV Panel Styling */
+.cv-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.cv-preview {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
+.cv-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0 15px 0;
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cv-header h3 {
+    color: #eaeaea;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.full-screen-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #7289da;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    background-color: rgba(114, 137, 218, 0.1);
+    transition: all 0.2s ease;
+}
+
+.full-screen-link:hover {
+    background-color: rgba(114, 137, 218, 0.2);
+    color: #a0b6ff;
+}
+
+.cv-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0; /* Important for flex children to shrink properly */
+    background-color: #262a33;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.cv-embed {
+    flex: 1;
+    border: none;
+    min-height: 0; /* Allow PDF to shrink if needed */
+}
+
+.cv-fallback {
+    display: none;
+    padding: 20px;
+    text-align: center;
+    color: #a0a8c0;
+}
+
+/* Only show fallback when embed fails */
+embed.cv-embed:not([src]) + .cv-fallback {
+    display: block;
+}
+
+/* Media queries for small screens */
+@media (max-width: 768px) {
+    .cv-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .full-screen-link {
+        width: 100%;
+        justify-content: center;
     }
 }

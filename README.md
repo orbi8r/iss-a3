@@ -86,6 +86,14 @@ The project follows a modular architecture with separate concerns:
 - Support for keyboard shortcuts and scroll wheel
 
 ## Version History
+- v0.2.3
+  - Fixed panel layout to use individual rounded boxes
+  - Fixed issue with the 2034th frame by limiting to 2033 frames
+  - Improved navigation controls - tap for single frame, hold for 0.2s to start 60fps playback
+  - Enhanced button behavior to properly distinguish between taps and holds
+  - Optimized rendering using requestAnimationFrame for smoother playback
+  - Implemented WebP image format instead of JPG for better compression and faster loading
+  - Added frame preloading system to ensure smooth playback performance
 - v0.2.2 
   - Redesigned panels as individual rounded boxes
   - Added fast-forward/rewind functionality when holding buttons
@@ -95,6 +103,7 @@ The project follows a modular architecture with separate concerns:
   - Removed video-specific terminology
 - v0.2.1
   - Updated version number display
+  - Scroll Bug Fix
 - v0.2.0
   - Initial office-themed UI implementation
 
@@ -104,7 +113,7 @@ The project follows a modular architecture with separate concerns:
 3. When complete, the first frame is displayed in the office-themed interface
 4. User can navigate through frames using:
    - Single click: one frame at a time
-   - Button hold: continuous playback at 60fps
+   - Button hold (0.2s): continuous playback at 60fps
    - Keyboard arrows: one frame at a time
    - Mouse scroll wheel
    - Interactive slider

@@ -4,18 +4,20 @@ let framesArray = [];
 let isPlaying = false;
 let playDirection = 1; // 1 for forward, -1 for backward
 let playInterval = null;
+let buttonHoldTimer = null;
+const holdThreshold = 200; // 0.2 seconds in milliseconds
 const playbackFPS = 60; // Frames per second for fast forward/rewind
 const slideElement = document.getElementById("slide");
 const frameCounter = document.getElementById("frame-counter");
 
 // Initialize the slideshow with frames
 export function initSlideshow(frames) {
-    framesArray = frames;
-    
-    // Fix for the 2034th frame bug - ensure we don't exceed the actual frames available
-    if (frames.length > 0) {
-        // Ensure the frames array doesn't include any undefined/null frames
-        framesArray = frames.filter(frame => frame);
+    // Fix for the 2034th frame bug - ensure we stop at 2033 frames
+    if (frames.length > 2033) {
+        console.log(`Limiting frames from ${frames.length} to 2033 frames to fix last frame bug`);
+        framesArray = frames.slice(0, 2033);
+    } else {
+        framesArray = frames;
     }
     
     // Initialize slideshow frame counter
@@ -23,6 +25,9 @@ export function initSlideshow(frames) {
     
     // Initialize the slider
     initializeSlider(framesArray.length);
+    
+    // Preload all frames upfront
+    preloadAllFrames();
     
     // Show first frame
     showImage(0);
@@ -43,6 +48,39 @@ function initializeSlider(frameCount) {
     });
 }
 
+// Preload all frames upfront to ensure they're always available
+function preloadAllFrames() {
+    console.log(`Preloading all ${framesArray.length} frames to keep in memory`);
+    
+    // Create Image objects for all frames to ensure they stay loaded
+    const imagePromises = [];
+    
+    for (let i = 0; i < framesArray.length; i++) {
+        if (framesArray[i]) {
+            const img = new Image();
+            
+            // Create a promise for each image load
+            const promise = new Promise((resolve) => {
+                img.onload = () => resolve(i);
+                img.onerror = () => {
+                    console.error(`Failed to load frame ${i}`);
+                    resolve(i); // Resolve anyway to continue
+                };
+            });
+            
+            img.src = framesArray[i];
+            // Replace the data URL with the Image object
+            framesArray[i] = img;
+            imagePromises.push(promise);
+        }
+    }
+    
+    // Log when all images are fully loaded
+    Promise.all(imagePromises).then(() => {
+        console.log("All frames are fully preloaded and permanently kept in memory");
+    });
+}
+
 // Show a specific image
 export function showImage(index) {
     // Add safety check for the bug at the end of the video
@@ -54,7 +92,14 @@ export function showImage(index) {
         return;
     }
     
-    slideElement.src = framesArray[index];
+    // Display the preloaded image
+    if (framesArray[index] instanceof HTMLImageElement) {
+        slideElement.src = framesArray[index].src;
+    } else {
+        // Fallback for frames that might still be data URLs
+        slideElement.src = framesArray[index];
+    }
+    
     currentIndex = index;
     frameCounter.textContent = `Frame: ${index + 1}/${framesArray.length}`;
     
@@ -83,20 +128,46 @@ export function nextImage() {
     showImage(newIndex);
 }
 
-// Start continuous playback
+// Start continuous playback - improved implementation using requestAnimationFrame for smoother playback
 function startPlayback(direction) {
-    if (isPlaying) return;
+    // If already playing in the same direction, don't restart
+    if (isPlaying && playDirection === direction) return;
+    
+    // If playing in a different direction, stop current playback first
+    if (isPlaying) {
+        stopPlayback();
+    }
     
     isPlaying = true;
     playDirection = direction;
     
-    playInterval = setInterval(() => {
-        if (direction === 1) {
-            nextImage();
-        } else {
-            prevImage();
+    let lastTimestamp = 0;
+    const frameInterval = 1000 / playbackFPS; // Time between frames in ms
+    
+    // Use requestAnimationFrame for smoother playback
+    function playbackFrame(timestamp) {
+        if (!isPlaying) return; // Stop if playback has been canceled
+        
+        // Check if enough time has passed to show next frame
+        if (!lastTimestamp || (timestamp - lastTimestamp) >= frameInterval) {
+            lastTimestamp = timestamp;
+            
+            // Show next/prev frame based on direction
+            if (direction === 1) {
+                nextImage();
+            } else {
+                prevImage();
+            }
         }
-    }, 1000 / playbackFPS);
+        
+        // Continue the animation loop
+        playInterval = requestAnimationFrame(playbackFrame);
+    }
+    
+    // Start the animation loop
+    playInterval = requestAnimationFrame(playbackFrame);
+    
+    console.log(`Started ${direction === 1 ? 'forward' : 'backward'} playback at ${playbackFPS} fps`);
 }
 
 // Stop continuous playback
@@ -104,8 +175,22 @@ function stopPlayback() {
     if (!isPlaying) return;
     
     isPlaying = false;
-    clearInterval(playInterval);
-    playInterval = null;
+    
+    // Cancel animation frame if using requestAnimationFrame
+    if (playInterval) {
+        cancelAnimationFrame(playInterval);
+        playInterval = null;
+    }
+    
+    console.log('Stopped playback');
+}
+
+// Clear any pending hold timer
+function clearHoldTimer() {
+    if (buttonHoldTimer) {
+        clearTimeout(buttonHoldTimer);
+        buttonHoldTimer = null;
+    }
 }
 
 // Set up event listeners for navigation
@@ -135,39 +220,103 @@ function setupEventListeners() {
     const prevButton = document.getElementById("prev");
     const nextButton = document.getElementById("next");
     
-    // Regular click for single frame navigation
-    prevButton.addEventListener("click", prevImage);
-    nextButton.addEventListener("click", nextImage);
+    // Track if the button was held long enough to trigger continuous playback
+    let wasButtonHeld = false;
     
-    // Hold down for continuous playback
+    // Hold down handling for left button
     prevButton.addEventListener("mousedown", function(e) {
         if (e.button === 0) { // Left mouse button
-            startPlayback(-1);
+            wasButtonHeld = false;
+            
+            // Start a timer to detect a hold
+            clearHoldTimer();
+            buttonHoldTimer = setTimeout(() => {
+                wasButtonHeld = true;
+                startPlayback(-1);
+            }, holdThreshold);
         }
     });
     
+    // Hold down handling for right button
     nextButton.addEventListener("mousedown", function(e) {
         if (e.button === 0) { // Left mouse button
-            startPlayback(1);
+            wasButtonHeld = false;
+            
+            // Start a timer to detect a hold
+            clearHoldTimer();
+            buttonHoldTimer = setTimeout(() => {
+                wasButtonHeld = true;
+                startPlayback(1);
+            }, holdThreshold);
         }
     });
     
-    // Stop playback when mouse up or mouse leave
+    // Handle click events (for when button wasn't held)
+    prevButton.addEventListener("click", function(e) {
+        if (!wasButtonHeld) {
+            prevImage();
+        }
+    });
+    
+    nextButton.addEventListener("click", function(e) {
+        if (!wasButtonHeld) {
+            nextImage();
+        }
+    });
+    
+    // Stop playback and clear timers when mouse up or mouse leave
     const stopEvents = ["mouseup", "mouseleave"];
     stopEvents.forEach(event => {
-        prevButton.addEventListener(event, stopPlayback);
-        nextButton.addEventListener(event, stopPlayback);
+        prevButton.addEventListener(event, function() {
+            clearHoldTimer();
+            stopPlayback();
+        });
+        
+        nextButton.addEventListener(event, function() {
+            clearHoldTimer();
+            stopPlayback();
+        });
     });
     
     // Also handle touch events for mobile
-    prevButton.addEventListener("touchstart", function() {
-        startPlayback(-1);
+    prevButton.addEventListener("touchstart", function(e) {
+        e.preventDefault(); // Prevent default touch behavior
+        wasButtonHeld = false;
+        
+        // Start a timer to detect a hold
+        clearHoldTimer();
+        buttonHoldTimer = setTimeout(() => {
+            wasButtonHeld = true;
+            startPlayback(-1);
+        }, holdThreshold);
     });
     
-    nextButton.addEventListener("touchstart", function() {
-        startPlayback(1);
+    nextButton.addEventListener("touchstart", function(e) {
+        e.preventDefault(); // Prevent default touch behavior
+        wasButtonHeld = false;
+        
+        // Start a timer to detect a hold
+        clearHoldTimer();
+        buttonHoldTimer = setTimeout(() => {
+            wasButtonHeld = true;
+            startPlayback(1);
+        }, holdThreshold);
     });
     
-    prevButton.addEventListener("touchend", stopPlayback);
-    nextButton.addEventListener("touchend", stopPlayback);
+    // Handle touch end for mobile
+    prevButton.addEventListener("touchend", function() {
+        clearHoldTimer();
+        if (!wasButtonHeld) {
+            prevImage();
+        }
+        stopPlayback();
+    });
+    
+    nextButton.addEventListener("touchend", function() {
+        clearHoldTimer();
+        if (!wasButtonHeld) {
+            nextImage();
+        }
+        stopPlayback();
+    });
 }

@@ -105,34 +105,12 @@ export function showImage(index) {
         return;
     }
     
-    // Display the preloaded image - fix for image display issue
-    try {
-        // We should always be receiving Image objects from main.js now
-        if (framesArray[index] instanceof HTMLImageElement) {
-            console.log(`Displaying frame ${index} from image object`);
-            slideElement.src = framesArray[index].src;
-        } else if (typeof framesArray[index] === 'string') {
-            // Fallback for URL strings
-            console.log(`Displaying frame ${index} from string URL`);
-            slideElement.src = framesArray[index];
-        } else {
-            console.error(`Unknown frame type at index ${index}:`, framesArray[index]);
-        }
-    } catch (e) {
-        console.error(`Error displaying frame ${index}:`, e);
-        // Try backup method if primary method fails
-        try {
-            // Create a new image as a fallback
-            const backupImg = new Image();
-            backupImg.onload = function() {
-                slideElement.src = backupImg.src;
-            };
-            backupImg.src = typeof framesArray[index] === 'string' 
-                ? framesArray[index] 
-                : (framesArray[index].src || `./frames/frame_${index.toString().padStart(4, '0')}.webp`);
-        } catch (backupError) {
-            console.error('Backup display method also failed:', backupError);
-        }
+    // Display the preloaded image
+    if (framesArray[index] instanceof HTMLImageElement) {
+        slideElement.src = framesArray[index].src;
+    } else {
+        // Fallback for frames that might still be data URLs
+        slideElement.src = framesArray[index];
     }
     
     currentIndex = index;

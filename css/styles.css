@@ -26,39 +26,201 @@ body {
 	max-width: 500px;
 }
 
-/* Cute loading animation */
+/* Updated loading animation */
 #loading-animation {
-	width: 100px;
-	height: 100px;
-	margin: 0 auto 20px;
+	width: 150px;
+	height: 150px;
+	margin: 0 auto 30px;
 	position: relative;
-	perspective: 1000px;
 }
 
-#loading-animation:before {
-	content: '';
+/* Film strip animation */
+.film-strip {
 	position: absolute;
 	width: 100%;
 	height: 100%;
-	border-radius: 50%;
-	border: 5px solid transparent;
-	border-top-color: #4CAF50;
-	border-bottom-color: #FFC107;
-	animation: spinner 1.5s linear infinite, colorChange 3s ease-in-out infinite alternate;
+	border-radius: 10px;
+	overflow: hidden;
+	background: #111;
 }
 
-#loading-animation:after {
+.film-track {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.film-hole {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background-color: #000;
+	box-shadow: inset 0 0 5px rgba(0, 255, 100, 0.6);
+	position: absolute;
+}
+
+.film-hole:nth-child(1) { top: 15px; left: 15px; animation: glow 2s infinite 0.1s; }
+.film-hole:nth-child(2) { top: 15px; right: 15px; animation: glow 2s infinite 0.3s; }
+.film-hole:nth-child(3) { bottom: 15px; left: 15px; animation: glow 2s infinite 0.5s; }
+.film-hole:nth-child(4) { bottom: 15px; right: 15px; animation: glow 2s infinite 0.7s; }
+
+.film-frames {
+	position: absolute;
+	top: 50%;
+	left: 0;
+	width: 100%;
+	height: 60px;
+	transform: translateY(-50%);
+	display: flex;
+	animation: slideFrames 3s linear infinite;
+	background: repeating-linear-gradient(
+		90deg,
+		#222,
+		#222 30px,
+		#333 30px,
+		#333 60px
+	);
+}
+
+/* Video camera lens animation */
+.camera-lens {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 70px;
+	height: 70px;
+	border-radius: 50%;
+	background: radial-gradient(circle, #444 0%, #222 70%, #000 100%);
+	box-shadow: 0 0 20px rgba(0, 200, 100, 0.7);
+	z-index: 2;
+	animation: pulse 2s ease-in-out infinite;
+}
+
+.lens-inner {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background: radial-gradient(circle, #111 0%, #000 100%);
+	overflow: hidden;
+}
+
+.lens-reflect {
+	position: absolute;
+	width: 15px;
+	height: 15px;
+	background: rgba(255, 255, 255, 0.2);
+	border-radius: 50%;
+	top: 8px;
+	left: 8px;
+	animation: moveReflection 4s linear infinite;
+}
+
+.lens-iris {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	border: 2px solid rgba(0, 255, 100, 0.5);
+	animation: iris 3s ease infinite;
+}
+
+/* Animated tape reel elements */
+.reel {
+	position: absolute;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	border: 3px solid #444;
+	background: #222;
+	z-index: 1;
+}
+
+.reel-left {
+	top: 15px;
+	left: 15px;
+	animation: rotate 2s linear infinite;
+}
+
+.reel-right {
+	top: 15px;
+	right: 15px;
+	animation: rotate 2s linear infinite reverse;
+}
+
+.reel:before {
 	content: '';
 	position: absolute;
-	width: 80%;
-	height: 80%;
-	top: 10%;
-	left: 10%;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 10px;
+	height: 10px;
+	background: #444;
 	border-radius: 50%;
-	border: 5px solid transparent;
-	border-left-color: #2196F3;
-	border-right-color: #F44336;
-	animation: spinner 1.2s linear infinite reverse, colorChange 3s ease-in-out infinite alternate-reverse;
+}
+
+.reel:after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 5px;
+	width: 30px;
+	height: 2px;
+	background: #555;
+	transform-origin: center;
+	animation: rotateSpoke 2s linear infinite;
+}
+
+/* Animations */
+@keyframes glow {
+	0%, 100% { box-shadow: inset 0 0 5px rgba(0, 255, 100, 0.6); }
+	50% { box-shadow: inset 0 0 10px rgba(0, 255, 100, 1); }
+}
+
+@keyframes slideFrames {
+	0% { transform: translateY(-50%) translateX(0); }
+	100% { transform: translateY(-50%) translateX(-60px); }
+}
+
+@keyframes pulse {
+	0%, 100% { box-shadow: 0 0 20px rgba(0, 200, 100, 0.7); }
+	50% { box-shadow: 0 0 30px rgba(0, 255, 150, 0.9); }
+}
+
+@keyframes iris {
+	0%, 100% { width: 20px; height: 20px; opacity: 0.7; }
+	50% { width: 25px; height: 25px; opacity: 1; }
+}
+
+@keyframes moveReflection {
+	0% { transform: translate(0, 0); }
+	25% { transform: translate(5px, 5px); }
+	50% { transform: translate(10px, 0); }
+	75% { transform: translate(5px, -5px); }
+	100% { transform: translate(0, 0); }
+}
+
+@keyframes rotate {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
+
+@keyframes rotateSpoke {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
 }
 
 @keyframes spinner {
@@ -180,4 +342,29 @@ body {
 	cursor: pointer;
 	border-radius: 50%;
 	box-shadow: -407px 0 0 400px #4CAF50;
+}
+
+/* Start button styles */
+.start-button {
+	background-color: #4CAF50;
+	color: white;
+	border: none;
+	padding: 15px 30px;
+	font-size: 18px;
+	margin: 20px auto;
+	cursor: pointer;
+	border-radius: 5px;
+	display: block;
+	transition: all 0.3s ease;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.start-button:hover {
+	background-color: #45a049;
+	transform: scale(1.05);
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.start-button:active {
+	transform: scale(0.98);
 }

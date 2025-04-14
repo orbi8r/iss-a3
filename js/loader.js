@@ -2,8 +2,8 @@
 export function initLoadingScreen(onStartCallback) {
     // Create start button for user interaction
     const startButton = document.createElement('button');
-    startButton.id = 'start-loading-btn';
-    startButton.textContent = 'Load Frames';
+    startButton.id = 'start-extraction-btn';
+    startButton.textContent = 'Start Frame Extraction';
     startButton.classList.add('start-button');
     document.querySelector('.loading-content').appendChild(startButton);
     
@@ -14,7 +14,7 @@ export function initLoadingScreen(onStartCallback) {
         // Start the loading animation
         startLoadingAnimation();
         
-        // Now we can start loading frames after user interaction
+        // Now we can load the video after user interaction
         if (onStartCallback) onStartCallback();
     });
 }

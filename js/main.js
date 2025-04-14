@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const video = document.getElementById("source-video");
     const canvas = document.getElementById("hidden-canvas");
     const ctx = canvas.getContext("2d");
-    const slideshow = document.getElementById("slideshow");
+    const appContainer = document.getElementById("app-container");
     const loadingScreen = document.getElementById("loading-screen");
     const progressBar = document.getElementById("progress-bar");
     const loadingText = document.getElementById("loading-text");
@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (timestamps.length === 0) {
             // All frames extracted. Initialize slideshow.
             loadingScreen.style.display = "none";
-            slideshow.style.display = "flex";
+            appContainer.style.display = "flex";
             
             // Initialize the slideshow with the frames
             initSlideshow(frames);
@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Draw video frame to canvas
                     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
                     // Store frame as data URL image
-                    frames.push(canvas.toDataURL("image/jpeg", 0.8)); // Added quality parameter
+                    frames.push(canvas.toDataURL("image/jpeg", 0.8));
                     resolve();
                 } catch (err) {
                     console.error("Error capturing frame at time " + time, err);

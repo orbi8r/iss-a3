@@ -91,6 +91,136 @@
 	box-shadow: -2000px 0 0 2000px #4CAF50; /* Increased shadow width to cover full slider range */
 }
 
+/* Slideshow styles with rounded corners and office theme */
+.video-container {
+    width: 70%;
+    height: 100vh;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.video-frame {
+    width: 100%;
+    height: 75vh;
+    background-color: #1e2126;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#slide {
+    max-width: 95%;
+    max-height: 90%;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}
+
+#frame-counter {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0,0,0,0.6);
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    font-weight: 500;
+    z-index: 10;
+}
+
+/* Dynamic island scroll control */
+.scroll-control {
+    width: 70%;
+    margin-top: 25px;
+    display: flex;
+    align-items: center;
+    background-color: rgba(30, 33, 38, 0.85);
+    border-radius: 50px;
+    padding: 10px 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.control-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #3a3f4b;
+    color: #fff;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    border: none;
+    outline: none;
+}
+
+.control-button:hover {
+    background-color: #4d5263;
+    transform: scale(1.1);
+}
+
+.control-button:active {
+    transform: scale(0.95);
+}
+
+.control-button i {
+    font-size: 16px;
+}
+
+.slider-container {
+    flex: 1;
+    margin: 0 15px;
+}
+
+#frame-slider {
+    width: 100%;
+    height: 6px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: #494e5a;
+    outline: none;
+    border-radius: 3px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+#frame-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #7289da;
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: -2000px 0 0 2000px #7289da;
+    border: 2px solid #fff;
+}
+
+#frame-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #7289da;
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: -2000px 0 0 2000px #7289da;
+    border: 2px solid #fff;
+}
+
 /* Media queries for high resolution displays */
 @media screen and (min-width: 2560px) {
 	/* Slideshow styles for 4K+ */
@@ -124,6 +254,34 @@
 		max-height: 75vh;
 		border-width: 8px;
 	}
+
+    .video-frame {
+        border-radius: 30px;
+    }
+    
+    #frame-counter {
+        font-size: 1.2em;
+        padding: 10px 20px;
+    }
+    
+    .control-button {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .control-button i {
+        font-size: 24px;
+    }
+    
+    #frame-slider {
+        height: 8px;
+    }
+    
+    #frame-slider::-webkit-slider-thumb,
+    #frame-slider::-moz-range-thumb {
+        width: 24px;
+        height: 24px;
+    }
 }
 
 @media screen and (min-width: 7000px) {
@@ -158,4 +316,59 @@
 		max-height: 80vh;
 		border-width: 10px;
 	}
+
+    .video-frame {
+        border-radius: 40px;
+    }
+    
+    #frame-counter {
+        font-size: 1.6em;
+        padding: 15px 30px;
+    }
+    
+    .control-button {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .control-button i {
+        font-size: 32px;
+    }
+    
+    #frame-slider {
+        height: 12px;
+    }
+    
+    #frame-slider::-webkit-slider-thumb,
+    #frame-slider::-moz-range-thumb {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+/* Responsive design for different screens */
+@media (max-width: 992px) {
+    .video-container {
+        width: 60%;
+    }
+    
+    .scroll-control {
+        width: 85%;
+    }
+}
+
+@media (max-width: 768px) {
+    .video-container {
+        width: 100%;
+        height: 60vh;
+        padding: 15px;
+    }
+    
+    .video-frame {
+        height: 45vh;
+    }
+    
+    .scroll-control {
+        width: 90%;
+    }
 }

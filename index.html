@@ -3,13 +3,17 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Video to Images Slideshow</title>
+	<title>Video Frame Explorer</title>
 	<!-- Split CSS files -->
 	<link rel="stylesheet" href="css/main.css" />
 	<link rel="stylesheet" href="css/loader.css" />
 	<link rel="stylesheet" href="css/slideshow.css" />
+	<link rel="stylesheet" href="css/panels.css" />
+	<!-- Font Awesome for icons -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 <body>
+	<!-- Loading screen -->
 	<div id="loading-screen">
 		<div class="loading-content">
 			<h2>Loading Frames</h2>
@@ -18,19 +22,69 @@
 			</div>
 			<div id="loading-text">0% Complete</div>
 		</div>
-		<!-- Added version counter -->
-		<div id="version-counter">v0.2.0</div>
+		<!-- Version counter -->
+		<div id="version-counter">v0.2.1</div>
 	</div>
+
+	<!-- Main application UI -->
+	<div id="app-container" style="display:none;">
+		<!-- Left side panels -->
+		<div class="panels-container">
+			<div class="panel" id="panel-1">
+				<div class="panel-header active" data-panel="1">
+					<i class="fa-solid fa-folder-open"></i>
+					<span>Console Output</span>
+				</div>
+				<div class="panel-content active" id="panel-content-1">
+					<!-- Content will be added dynamically -->
+				</div>
+			</div>
+
+			<div class="panel" id="panel-2">
+				<div class="panel-header" data-panel="2">
+					<i class="fa-solid fa-file-pdf"></i>
+					<span>CV Embed</span>
+				</div>
+				<div class="panel-content" id="panel-content-2">
+					<!-- Content will be added dynamically -->
+				</div>
+			</div>
+
+			<div class="panel" id="panel-3">
+				<div class="panel-header" data-panel="3">
+					<i class="fa-solid fa-align-left"></i>
+					<span>Text Analysis</span>
+				</div>
+				<div class="panel-content" id="panel-content-3">
+					<!-- Content will be added dynamically -->
+				</div>
+			</div>
+		</div>
+		
+		<!-- Right side video player -->
+		<div class="video-container">
+			<div class="video-frame">
+				<img id="slide" src="" alt="Video Frame" />
+				<div id="frame-counter">Frame: 1/0</div>
+			</div>
+			
+			<!-- Dynamic island scroll control -->
+			<div class="scroll-control">
+				<button id="prev" class="control-button"><i class="fa-solid fa-chevron-left"></i></button>
+				<div class="slider-container">
+					<input type="range" id="frame-slider" min="0" max="100" value="0">
+				</div>
+				<button id="next" class="control-button"><i class="fa-solid fa-chevron-right"></i></button>
+			</div>
+		</div>
+	</div>
+
 	<!-- Hidden video and canvas for frame extraction -->
 	<video id="source-video" src="video/WebVideo.mp4" style="display: none;" crossorigin="anonymous"></video>
 	<canvas id="hidden-canvas" style="display: none;"></canvas>
-	<div id="slideshow" style="display:none;">
-		<button id="prev">&larr;</button>
-		<img id="slide" src="" alt="Slideshow Image" />
-		<button id="next">&rarr;</button>
-		<div id="frame-counter">Frame: 1/0</div>
-	</div>
-	<!-- Split JavaScript files -->
+
+	<!-- JavaScript files -->
 	<script type="module" src="js/main.js"></script>
+	<script type="module" src="js/panels.js"></script>
 </body>
 </html>

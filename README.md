@@ -1,11 +1,13 @@
-# iss-a3
+# Video Frame Explorer
 
 Assignment 3, Intro to Software Systems - IIIT Hyderabad
 
 ## Project Overview
-This application extracts frames from a video and displays them as a slideshow with navigation controls. Key features include:
+This application extracts frames from a video and displays them as a slideshow with an intuitive, office-themed interface. Key features include:
+
 - Frame-by-frame video extraction
-- Interactive slider for navigating through frames
+- Modern UI with expandable side panels
+- Rounded video display with dynamic island-style controls
 - Keyboard and scroll wheel navigation
 - Animated loading screen with progress tracking
 - Responsive design that works on displays from standard to 8K resolution
@@ -32,6 +34,10 @@ The project follows a modular architecture with separate concerns:
   - Creates and manages the loading animation
   - Handles the start button and user interaction
   - Controls progress bar updates
+  
+- `js/panels.js` - Side panel functionality
+  - Controls the expandable side panels
+  - Handles panel animations and state management
 
 ### CSS Files
 - `css/main.css` - Core application styles
@@ -39,28 +45,48 @@ The project follows a modular architecture with separate concerns:
   - Manages responsive design basics
   
 - `css/slideshow.css` - Slideshow component styles
-  - Styles for the image display
-  - Navigation buttons
-  - Slider control appearance
+  - Styles for the rounded video display
+  - Dynamic island-style controls
+  - Slider and navigation buttons
   
 - `css/loader.css` - Loading screen styles
-  - Film/camera themed loading animation
+  - Office-themed loading animation
   - Progress bar styling
   - Start button appearance
+  
+- `css/panels.css` - Panel component styles
+  - Expandable panel styling and animations
+  - Panel header and content areas
 
 ### Media Files
 - `video/WebVideo.mp4` - Source video for frame extraction
+
+## Interface Features
+
+### Left Side Panels
+- Three collapsible panels for different functions
+- First panel expanded by default
+- Smooth animation when switching between panels
+- Only one panel can be open at a time
+
+### Video Display
+- Rounded edges with modern appearance
+- Centered display with optimal sizing
+- Frame counter showing current position
+
+### Navigation Controls
+- Dynamic island-style control bar
+- Circular navigation buttons
+- Smooth slider for direct frame access
+- Support for keyboard shortcuts and scroll wheel
 
 ## How It Works
 1. User clicks "Start Frame Extraction" button
 2. The application extracts every frame from the video
 3. A progress bar shows extraction status
-4. When complete, the first frame is displayed
-5. User can navigate through frames using:
-   - Left/right arrow buttons
-   - Keyboard arrow keys
-   - Mouse scroll wheel (down for next, up for previous)
-   - Interactive slider at the bottom
+4. When complete, the first frame is displayed in the office-themed interface
+5. User can navigate through frames using buttons, keyboard, or scroll wheel
+6. Left side panels can be expanded/collapsed to access different functions
 
 ## Asset Credits
 - "Canonical Hologra Office" (https://skfb.ly/oTyAG) by Aeri is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
@@ -99,6 +125,14 @@ The project follows a modular architecture with separate concerns:
   - Count of pronouns grouped by pronouns
   - Count of prepositions grouped by prepositions
   - Count of indefinite articles grouped by articles
+
+## Notes
+- Ensure the website is neat and user-friendly.
+- Use this README to provide accurate context for future LLMs assisting with this project.
+
+## Asset Credits
+- "Canonical Hologra Office" (https://skfb.ly/oTyAG) by Aeri is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+- "Haunt Muskie" music by C418 - Minecraft () 
 
 ## Notes
 - Ensure the website is neat and user-friendly.

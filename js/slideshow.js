@@ -9,7 +9,7 @@ export function initSlideshow(frames) {
     framesArray = frames;
     
     // Initialize slideshow frame counter
-    frameCounter.textContent = "Frame: 0/" + frames.length;
+    frameCounter.textContent = `Frame: 1/${frames.length}`;
     
     // Initialize the slider
     initializeSlider(frames.length);
@@ -23,14 +23,7 @@ export function initSlideshow(frames) {
 
 // Initialize the slider element
 function initializeSlider(frameCount) {
-    const slideshow = document.getElementById("slideshow");
-    const sliderContainer = document.createElement('div');
-    sliderContainer.id = 'slider-container';
-    
-    const slider = document.createElement('input');
-    slider.type = 'range';
-    slider.id = 'frame-slider';
-    slider.min = 0;
+    const slider = document.getElementById('frame-slider');
     slider.max = frameCount - 1;
     slider.value = 0;
     
@@ -38,9 +31,6 @@ function initializeSlider(frameCount) {
         const frameIndex = parseInt(this.value);
         showImage(frameIndex);
     });
-    
-    sliderContainer.appendChild(slider);
-    slideshow.appendChild(sliderContainer);
 }
 
 // Show a specific image

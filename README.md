@@ -86,12 +86,6 @@ The project follows a modular architecture with separate concerns:
 - Support for keyboard shortcuts and scroll wheel
 
 ## Version History
-- v0.3.0
-  - Major performance improvement: Removed video extraction completely
-  - Now loading pre-extracted WebP frames directly from the frames folder
-  - Implemented batch loading system to prevent browser freezing
-  - Added detailed progress tracking for frame loading
-  - Significantly reduced initial loading time
 - v0.2.5
   - Removed parallel frame loading technique due to ordering issues
   - Implemented improved single-channel frame loading for better reliability

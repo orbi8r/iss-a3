@@ -3,7 +3,9 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Video Frame Explorer</title>
+	<title>Personal Portfolio</title>
+	<!-- Favicon - camera from loader -->
+	<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%231a1f2c'/><circle cx='50' cy='50' r='25' fill='%23303a50' stroke='%237289da' stroke-width='2'/><circle cx='37' cy='35' r='5' fill='white' opacity='0.3'/></svg>">
 	<!-- Split CSS files -->
 	<link rel="stylesheet" href="css/main.css" />
 	<link rel="stylesheet" href="css/loader.css" />
@@ -16,14 +18,14 @@
 	<!-- Loading screen -->
 	<div id="loading-screen">
 		<div class="loading-content">
-			<h2>Loading Frames</h2>
+			<h2>Loading Portfolio</h2>
 			<div class="progress-container">
 				<div id="progress-bar"></div>
 			</div>
 			<div id="loading-text">0% Complete</div>
 		</div>
 		<!-- Version counter -->
-		<div id="version-counter">v0.2.1</div>
+		<div id="version-counter">v0.2.2</div>
 	</div>
 
 	<!-- Main application UI -->
@@ -61,10 +63,10 @@
 			</div>
 		</div>
 		
-		<!-- Right side video player -->
-		<div class="video-container">
-			<div class="video-frame">
-				<img id="slide" src="" alt="Video Frame" />
+		<!-- Right side content display -->
+		<div class="content-container">
+			<div class="content-frame">
+				<img id="slide" src="" alt="Portfolio Content" />
 				<div id="frame-counter">Frame: 1/0</div>
 			</div>
 			

@@ -3,19 +3,19 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', Arial, sans-serif;
-    background-color: #323842;
-    color: #333;
+    background-color: #2a3142;
+    color: #eaeaea;
     overflow: hidden;
     line-height: 1.6;
 }
 
-/* Main app container with grid layout */
+/* Main app container with flex layout */
 #app-container {
     display: flex;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-color: #323842; /* Dark office backdrop color */
+    background-color: #2a3142; /* Office backdrop color */
 }
 
 /* Shared styles */
@@ -27,27 +27,28 @@ button {
 
 /* Typography */
 h1, h2, h3, h4, h5 {
-    color: #333;
+    color: #eaeaea;
     font-weight: 500;
 }
 
 /* Scrollbars for the entire app */
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #eaeaea;
+    background: #1e2126;
+    border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #b0b0b0;
+    background-color: #4f6b8f;
     border-radius: 10px;
-    border: 2px solid #eaeaea;
+    border: 2px solid #1e2126;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background-color: #888;
+    background-color: #5d73c7;
 }
 
 /* Media queries for high resolution displays */
@@ -60,5 +61,12 @@ h1, h2, h3, h4, h5 {
 @media screen and (min-width: 7000px) {
     body {
         font-size: 24px;
+    }
+}
+
+/* Responsive layout adjustments */
+@media (max-width: 768px) {
+    #app-container {
+        flex-direction: column;
     }
 }

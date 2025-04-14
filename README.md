@@ -1,13 +1,14 @@
-# Video Frame Explorer
+# Personal Portfolio
 
 Assignment 3, Intro to Software Systems - IIIT Hyderabad
 
 ## Project Overview
-This application extracts frames from a video and displays them as a slideshow with an intuitive, office-themed interface. Key features include:
+This application showcases a personal portfolio with an intuitive, office-themed interface. Key features include:
 
-- Frame-by-frame video extraction
-- Modern UI with expandable side panels
-- Rounded video display with dynamic island-style controls
+- Frame-by-frame content navigation
+- Modern UI with expandable, rounded side panels
+- Rounded content display with dynamic island-style controls
+- Fast-forward/rewind when holding navigation buttons
 - Keyboard and scroll wheel navigation
 - Animated loading screen with progress tracking
 - Responsive design that works on displays from standard to 8K resolution
@@ -21,14 +22,15 @@ The project follows a modular architecture with separate concerns:
 
 ### JavaScript Files
 - `js/main.js` - Core application logic
-  - Handles video loading and frame extraction
+  - Handles content loading and frame extraction
   - Manages the main processing pipeline
   - Coordinates between modules
   
-- `js/slideshow.js` - Slideshow functionality
+- `js/slideshow.js` - Frame navigation functionality
   - Manages displaying and navigating through frames
   - Controls slider functionality
   - Handles keyboard and mouse wheel navigation
+  - Implements fast-forward/rewind when holding buttons
   
 - `js/loader.js` - Loading screen functionality
   - Creates and manages the loading animation
@@ -44,8 +46,8 @@ The project follows a modular architecture with separate concerns:
   - Contains global styling and variables
   - Manages responsive design basics
   
-- `css/slideshow.css` - Slideshow component styles
-  - Styles for the rounded video display
+- `css/slideshow.css` - Content display styles
+  - Styles for the rounded content display
   - Dynamic island-style controls
   - Slider and navigation buttons
   
@@ -55,21 +57,23 @@ The project follows a modular architecture with separate concerns:
   - Start button appearance
   
 - `css/panels.css` - Panel component styles
-  - Expandable panel styling and animations
+  - Rounded panel styling and animations
   - Panel header and content areas
 
-### Media Files
-- `video/WebVideo.mp4` - Source video for frame extraction
+### Media and Documents
+- `video/WebVideo.mp4` - Source frames for the presentation
+- `resume/resume.pdf` - CV for embedding in panel 2
 
 ## Interface Features
 
 ### Left Side Panels
-- Three collapsible panels for different functions
+- Three collapsible rounded panels for different functions
 - First panel expanded by default
 - Smooth animation when switching between panels
 - Only one panel can be open at a time
+- Clean, modern appearance with rounded corners
 
-### Video Display
+### Content Display
 - Rounded edges with modern appearance
 - Centered display with optimal sizing
 - Frame counter showing current position
@@ -77,27 +81,38 @@ The project follows a modular architecture with separate concerns:
 ### Navigation Controls
 - Dynamic island-style control bar
 - Circular navigation buttons
+- Continuous playback when holding navigation buttons (60fps)
 - Smooth slider for direct frame access
 - Support for keyboard shortcuts and scroll wheel
 
+## Version History
+- v0.2.2 
+  - Redesigned panels as individual rounded boxes
+  - Added fast-forward/rewind functionality when holding buttons
+  - Fixed bug with last frame (2034th frame)
+  - Renamed to "Personal Portfolio"
+  - Added custom favicon
+  - Removed video-specific terminology
+- v0.2.1
+  - Updated version number display
+- v0.2.0
+  - Initial office-themed UI implementation
+
 ## How It Works
-1. User clicks "Start Frame Extraction" button
-2. The application extracts every frame from the video
-3. A progress bar shows extraction status
-4. When complete, the first frame is displayed in the office-themed interface
-5. User can navigate through frames using buttons, keyboard, or scroll wheel
-6. Left side panels can be expanded/collapsed to access different functions
+1. User views the loading screen while content is prepared
+2. A progress bar shows loading status
+3. When complete, the first frame is displayed in the office-themed interface
+4. User can navigate through frames using:
+   - Single click: one frame at a time
+   - Button hold: continuous playback at 60fps
+   - Keyboard arrows: one frame at a time
+   - Mouse scroll wheel
+   - Interactive slider
 
 ## Asset Credits
 - "Canonical Hologra Office" (https://skfb.ly/oTyAG) by Aeri is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
-- "Haunt Muskie" music by C418 - Minecraft ()
 
 ## Project Checklist
-
-### Instructions
-- Use this README to track the progress of your assignment.
-- Tick the checkpoints once completed by replacing the ❌ with ✅.
-- Always ensure this README reflects the current project state to provide accurate context to any LLMs assisting you.
 
 ### Checkpoints
 
@@ -125,19 +140,3 @@ The project follows a modular architecture with separate concerns:
   - Count of pronouns grouped by pronouns
   - Count of prepositions grouped by prepositions
   - Count of indefinite articles grouped by articles
-
-## Notes
-- Ensure the website is neat and user-friendly.
-- Use this README to provide accurate context for future LLMs assisting with this project.
-
-## Asset Credits
-- "Canonical Hologra Office" (https://skfb.ly/oTyAG) by Aeri is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
-- "Haunt Muskie" music by C418 - Minecraft () 
-
-## Notes
-- Ensure the website is neat and user-friendly.
-- Use this README to provide accurate context for future LLMs assisting with this project.
-
-## Asset Credits
-- "Canonical Hologra Office" (https://skfb.ly/oTyAG) by Aeri is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
-- "Haunt Muskie" music by C418 - Minecraft ()

@@ -8,6 +8,7 @@
     padding: 30px;
     box-sizing: border-box;
     overflow-y: auto;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
     align-items: stretch;
     justify-content: flex-start;
 }
@@ -22,6 +23,7 @@
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     margin-bottom: 10px;
     flex: 0;
+    min-width: 0; /* Ensure panel can shrink if needed */
 }
 
 .panel.active {
@@ -45,6 +47,9 @@
     font-weight: 500;
     color: #eaeaea;
     border-radius: 20px 20px 0 0;
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflowing text */
+    text-overflow: ellipsis; /* Show ellipsis for overflowing text */
 }
 
 .panel-header:hover {
@@ -60,6 +65,13 @@
 .panel-header i {
     margin-right: 10px;
     font-size: 18px;
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+.panel-header span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .panel-content {
@@ -68,11 +80,13 @@
     transition: height 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     background-color: #1e2126;
     padding: 0;
+    width: 100%; /* Ensure content doesn't overflow horizontally */
 }
 
 .panel-content.active {
     height: calc(100% - 60px);
     overflow-y: auto;
+    overflow-x: hidden; /* Prevent horizontal scrolling in content */
     padding: 20px;
 }
 

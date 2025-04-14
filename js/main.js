@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Configuration for optimization
     const videoFPS = 30;
     const useWebWorkers = true; // Enable parallel processing
-    const workerCount = navigator.hardwareConcurrency || 4; // Use number of CPU cores
+    const workerCount = Math.min(navigator.hardwareConcurrency || 4, 8); // Limit max workers to 8
     const batchSize = 5; // Number of frames to process in each batch
     const resolutionScale = 1.0; // 1.0 = full resolution, 0.5 = half resolution, etc.
     const imageQuality = 0.9; // Higher quality for WebP (0.0 to 1.0)
@@ -77,19 +77,25 @@ document.addEventListener("DOMContentLoaded", function () {
         const frameTime = 1 / videoFPS;
         video.pause();
         
-        // Create an array of all frame times
-        const timestamps = [];
+        // Create an array of all frame times with their indices
+        const timestampsWithIndices = [];
+        let frameIndex = 0;
+        
         for (let time = 0; time < video.duration; time += frameTime) {
-            timestamps.push(parseFloat(time.toFixed(3)));
+            timestampsWithIndices.push({
+                time: parseFloat(time.toFixed(3)),
+                index: frameIndex++
+            });
         }
         
-        totalFrames = timestamps.length;
+        totalFrames = timestampsWithIndices.length;
         console.log(`Will extract ${totalFrames} frames at ${frameTime}s intervals (${videoFPS} fps) using ${workerCount} workers`);
         
         // Create batches of timestamps for parallel processing
+        // We'll sort them by time to help the video seek more efficiently
         const batches = [];
-        for (let i = 0; i < timestamps.length; i += batchSize) {
-            batches.push(timestamps.slice(i, i + batchSize));
+        for (let i = 0; i < timestampsWithIndices.length; i += batchSize) {
+            batches.push(timestampsWithIndices.slice(i, i + batchSize));
         }
         
         // Track active workers
@@ -103,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (activeWorkers === 0) {
                     console.log("All frames extracted");
                     
-                    // Sort frames by index if they came back out of order
+                    // Sort frames by their original index to maintain the correct order
                     frames.sort((a, b) => a.index - b.index);
                     
                     // Finalize and show
@@ -112,22 +118,23 @@ document.addEventListener("DOMContentLoaded", function () {
                     
                     // Initialize the slideshow with just the image data
                     const imageDataOnly = frames.map(f => f.data);
+                    console.log(`Initializing slideshow with ${imageDataOnly.length} frames`);
                     initSlideshow(imageDataOnly);
                 }
                 return;
             }
             
             // Get the next batch
-            const batchTimestamps = batches.shift();
+            const batchTimestampsWithIndices = batches.shift();
             activeWorkers++;
             
             // Process the batch
-            processBatch(batchTimestamps, 0, []);
+            processBatch(batchTimestampsWithIndices, 0, []);
         }
         
         // Function to process a batch of timestamps
-        function processBatch(batchTimestamps, batchIndex, batchFrames) {
-            if (batchIndex >= batchTimestamps.length) {
+        function processBatch(batchTimestampsWithIndices, batchIndex, batchFrames) {
+            if (batchIndex >= batchTimestampsWithIndices.length) {
                 // Batch complete
                 // Add all frames from this batch
                 frames.push(...batchFrames);
@@ -144,7 +151,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
             
-            const time = batchTimestamps[batchIndex];
+            const { time, index } = batchTimestampsWithIndices[batchIndex];
             
             // Create a promise to handle the seeking and frame capture
             const framePromise = new Promise((resolve, reject) => {
@@ -158,11 +165,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         // Store frame as data URL image using WebP for better compression
                         const imageData = canvas.toDataURL("image/webp", imageQuality);
                         
-                        // Find the original index in the full timestamps array
-                        const originalIndex = Math.round(time * videoFPS);
-                        
                         batchFrames.push({
-                            index: originalIndex,
+                            index: index, // Use the exact index we assigned earlier
                             data: imageData
                         });
                         
@@ -188,16 +192,21 @@ document.addEventListener("DOMContentLoaded", function () {
             // Process the next frame in this batch
             framePromise
                 .then(() => {
-                    processBatch(batchTimestamps, batchIndex + 1, batchFrames);
+                    processBatch(batchTimestampsWithIndices, batchIndex + 1, batchFrames);
                 })
                 .catch(err => {
                     console.error("Frame extraction error:", err);
-                    // Continue anyway
-                    processBatch(batchTimestamps, batchIndex + 1, batchFrames);
+                    // Continue anyway, but add a placeholder for the failed frame
+                    // to maintain correct order
+                    batchFrames.push({
+                        index: index,
+                        data: null // This will be filtered out later
+                    });
+                    processBatch(batchTimestampsWithIndices, batchIndex + 1, batchFrames);
                 });
         }
         
-        // Start initial workers
+        // Start initial workers - but limit them to avoid overwhelming the system
         for (let i = 0; i < maxWorkers; i++) {
             startWorkerForBatch();
         }
@@ -229,8 +238,11 @@ document.addEventListener("DOMContentLoaded", function () {
             loadingScreen.style.display = "none";
             appContainer.style.display = "flex";
             
+            // Filter out any null frames
+            const validFrames = frames.filter(frame => frame !== null);
+            
             // Initialize the slideshow with the frames
-            initSlideshow(frames);
+            initSlideshow(validFrames);
             
             return;
         }

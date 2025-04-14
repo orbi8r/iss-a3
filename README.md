@@ -86,6 +86,12 @@ The project follows a modular architecture with separate concerns:
 - Support for keyboard shortcuts and scroll wheel
 
 ## Version History
+- v0.2.4
+  - Fixed horizontal scrollbar issue in panels by improving the CSS for dynamic sizing
+  - Fixed frame ordering bug in parallel extraction to ensure proper frame sequence
+  - Improved worker management to prevent system overload during parallel processing
+  - Added more robust error handling for frame extraction failures
+  - Enhanced debugging with better console logging
 - v0.2.3
   - Fixed panel layout to use individual rounded boxes
   - Fixed issue with the 2034th frame by limiting to 2033 frames

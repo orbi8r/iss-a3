@@ -22,87 +22,98 @@ document.addEventListener("DOMContentLoaded", function () {
         const totalFrames = framePaths.length;
         console.log(`Found ${totalFrames} frames to load`);
         
-        // Set up frame loading
-        let framesLoaded = 0;
-        const frames = [];
+        // Create an array to hold all frames, pre-filled with null values
+        const frames = new Array(totalFrames).fill(null);
         
         // Update initial progress
         progressBar.style.width = "0%";
         loadingText.textContent = `0% Complete (0/${totalFrames} frames)`;
         
-        // Load each frame with preloading for smooth playback
-        loadFramesInBatches(framePaths, 0, frames, totalFrames);
+        // Load frames in parallel with bigger batches
+        loadFramesInParallel(framePaths, frames, totalFrames);
     }
     
-    // Function to load frames in smaller batches to prevent browser from freezing
-    function loadFramesInBatches(framePaths, startIndex, frames, totalFrames, batchSize = 20) {
-        const endIndex = Math.min(startIndex + batchSize, framePaths.length);
+    // Function to load frames in parallel while maintaining order
+    function loadFramesInParallel(framePaths, frames, totalFrames, batchSize = 50) {
+        let totalLoaded = 0;
+        let batchesProcessing = 0;
+        const maxConcurrentBatches = 4; // Limit concurrent batches to prevent overwhelming the browser
         
-        // Load a batch of frames
-        loadFrameBatch(framePaths, startIndex, endIndex, frames, totalFrames)
-            .then(updatedFrames => {
-                // Update progress
-                const framesLoaded = updatedFrames.length;
-                const progress = Math.round((framesLoaded / totalFrames) * 100);
-                progressBar.style.width = progress + "%";
-                loadingText.textContent = `${progress}% Complete (${framesLoaded}/${totalFrames} frames)`;
+        // Process frames in batches
+        function processBatch(startIndex) {
+            const endIndex = Math.min(startIndex + batchSize, framePaths.length);
+            batchesProcessing++;
+            
+            // Load all frames in this batch simultaneously
+            const batchPromises = [];
+            
+            for (let i = startIndex; i < endIndex; i++) {
+                // Create promise for each frame
+                const promise = new Promise((resolve) => {
+                    const img = new Image();
+                    
+                    img.onload = function() {
+                        // Store the frame at its correct index position to maintain order
+                        frames[i] = img.src;
+                        totalLoaded++;
+                        
+                        // Update progress after each frame loads
+                        const progress = Math.round((totalLoaded / totalFrames) * 100);
+                        progressBar.style.width = progress + "%";
+                        loadingText.textContent = `${progress}% Complete (${totalLoaded}/${totalFrames} frames)`;
+                        
+                        resolve();
+                    };
+                    
+                    img.onerror = function() {
+                        console.error(`Failed to load frame: ${framePaths[i]}`);
+                        // Keep null at this position
+                        totalLoaded++;
+                        resolve();
+                    };
+                    
+                    img.src = framePaths[i];
+                });
                 
-                // Check if we've loaded all frames
-                if (endIndex >= framePaths.length) {
+                batchPromises.push(promise);
+            }
+            
+            // When all frames in this batch are loaded
+            Promise.all(batchPromises).then(() => {
+                batchesProcessing--;
+                
+                // Start the next batch if there are more frames to load
+                const nextBatchIndex = endIndex;
+                if (nextBatchIndex < framePaths.length && batchesProcessing < maxConcurrentBatches) {
+                    processBatch(nextBatchIndex);
+                }
+                
+                // Check if all batches are complete
+                if (totalLoaded >= totalFrames || (nextBatchIndex >= framePaths.length && batchesProcessing === 0)) {
+                    // All frames have been loaded
                     console.log("All frames loaded successfully");
+                    
+                    // Clean up any null frames (failed loads)
+                    const validFrames = frames.filter(frame => frame !== null);
+                    
+                    console.log(`Initializing slideshow with ${validFrames.length} frames`);
                     
                     // Hide loading screen and show app
                     loadingScreen.style.display = "none";
                     appContainer.style.display = "flex";
                     
                     // Initialize slideshow with loaded frames
-                    initSlideshow(updatedFrames);
-                } else {
-                    // Load the next batch (use setTimeout to prevent UI freezing)
-                    setTimeout(() => {
-                        loadFramesInBatches(framePaths, endIndex, updatedFrames, totalFrames, batchSize);
-                    }, 0);
+                    initSlideshow(validFrames);
                 }
-            })
-            .catch(error => {
-                console.error("Error loading frames:", error);
-                loadingText.textContent = "Error loading frames. Please check console for details.";
             });
-    }
-    
-    // Load a batch of frames returning a promise
-    function loadFrameBatch(framePaths, startIndex, endIndex, frames, totalFrames) {
-        return new Promise((resolve) => {
-            let currentIndex = startIndex;
-            
-            function loadNextFrame() {
-                if (currentIndex >= endIndex) {
-                    resolve(frames);
-                    return;
-                }
-                
-                const img = new Image();
-                
-                img.onload = function() {
-                    frames.push(img.src);
-                    currentIndex++;
-                    loadNextFrame();
-                };
-                
-                img.onerror = function() {
-                    console.error(`Failed to load frame: ${framePaths[currentIndex]}`);
-                    // Add null placeholder to maintain frame order
-                    frames.push(null);
-                    currentIndex++;
-                    loadNextFrame();
-                };
-                
-                // Set the image source to load it
-                img.src = framePaths[currentIndex];
+        }
+        
+        // Start initial batches
+        for (let i = 0; i < maxConcurrentBatches; i++) {
+            const startIndex = i * batchSize;
+            if (startIndex < framePaths.length) {
+                processBatch(startIndex);
             }
-            
-            // Start loading the first frame in the batch
-            loadNextFrame();
-        });
+        }
     }
 });

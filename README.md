@@ -86,6 +86,11 @@ The project follows a modular architecture with separate concerns:
 - Support for keyboard shortcuts and scroll wheel
 
 ## Version History
+- v0.3.1
+  - Significantly improved frame loading performance using Web Workers for parallel loading
+  - Increased batch size for faster image processing
+  - Enforced full frame preloading before allowing user interaction
+  - Improved memory management and frame display reliability
 - v0.3.0
   - Major performance improvement: Removed video extraction completely
   - Now loading pre-extracted WebP frames directly from the frames folder

@@ -7,11 +7,13 @@ let playInterval = null;
 let buttonHoldTimer = null;
 const holdThreshold = 200; // 0.2 seconds in milliseconds
 const playbackFPS = 60; // Frames per second for fast forward/rewind
-const slideElement = document.getElementById("slide");
-const frameCounter = document.getElementById("frame-counter");
 
 // Initialize the slideshow with frames
 export function initSlideshow(frames) {
+    // Get DOM elements after they are rendered
+    const slideElement = document.getElementById("slide");
+    const frameCounter = document.getElementById("frame-counter");
+    
     // Fix for the 2034th frame bug - ensure we stop at 2033 frames
     if (frames.length > 2033) {
         console.log(`Limiting frames from ${frames.length} to 2033 frames to fix last frame bug`);
@@ -25,9 +27,6 @@ export function initSlideshow(frames) {
     
     // Initialize the slider
     initializeSlider(framesArray.length);
-    
-    // Preload all frames upfront
-    preloadAllFrames();
     
     // Show first frame
     showImage(0);
@@ -48,41 +47,11 @@ function initializeSlider(frameCount) {
     });
 }
 
-// Preload all frames upfront to ensure they're always available
-function preloadAllFrames() {
-    console.log(`Preloading all ${framesArray.length} frames to keep in memory`);
-    
-    // Create Image objects for all frames to ensure they stay loaded
-    const imagePromises = [];
-    
-    for (let i = 0; i < framesArray.length; i++) {
-        if (framesArray[i]) {
-            const img = new Image();
-            
-            // Create a promise for each image load
-            const promise = new Promise((resolve) => {
-                img.onload = () => resolve(i);
-                img.onerror = () => {
-                    console.error(`Failed to load frame ${i}`);
-                    resolve(i); // Resolve anyway to continue
-                };
-            });
-            
-            img.src = framesArray[i];
-            // Replace the data URL with the Image object
-            framesArray[i] = img;
-            imagePromises.push(promise);
-        }
-    }
-    
-    // Log when all images are fully loaded
-    Promise.all(imagePromises).then(() => {
-        console.log("All frames are fully preloaded and permanently kept in memory");
-    });
-}
-
 // Show a specific image
 export function showImage(index) {
+    const slideElement = document.getElementById("slide");
+    const frameCounter = document.getElementById("frame-counter");
+    
     // Add safety check for the bug at the end of the video
     if (index < 0 || index >= framesArray.length) return;
     
@@ -92,13 +61,8 @@ export function showImage(index) {
         return;
     }
     
-    // Display the preloaded image
-    if (framesArray[index] instanceof HTMLImageElement) {
-        slideElement.src = framesArray[index].src;
-    } else {
-        // Fallback for frames that might still be data URLs
-        slideElement.src = framesArray[index];
-    }
+    // Set the image source to the frame data URL
+    slideElement.src = framesArray[index];
     
     currentIndex = index;
     frameCounter.textContent = `Frame: ${index + 1}/${framesArray.length}`;

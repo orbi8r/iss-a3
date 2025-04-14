@@ -7,7 +7,8 @@ export function getPreloadedFrames() {
     for (let i = 0; i < 2033; i++) {
         // Format frame number with leading zeros (0000, 0001, etc.)
         const frameNumber = i.toString().padStart(4, '0');
-        frames.push(`frames/frame_${frameNumber}.webp`);
+        // Use proper relative path from root of website
+        frames.push(`./frames/frame_${frameNumber}.webp`);
     }
     
     console.log(`Prepared ${frames.length} frame paths for preloading`);

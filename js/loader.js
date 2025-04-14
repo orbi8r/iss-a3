@@ -1,4 +1,6 @@
 // Loading screen functionality
+import { toggleMusic } from './audio.js';
+
 export function initLoadingScreen(onStartCallback) {
     // Create start button for user interaction
     const startButton = document.createElement('button');
@@ -13,6 +15,10 @@ export function initLoadingScreen(onStartCallback) {
         
         // Start the loading animation
         startLoadingAnimation();
+        
+        // Ensure music starts playing when extraction begins
+        // This will use the already initialized audio player from main.js
+        toggleMusic();
         
         // Now we can load the video after user interaction
         if (onStartCallback) onStartCallback();

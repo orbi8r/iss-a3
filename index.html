@@ -25,7 +25,7 @@
 			<div id="loading-text">0% Complete</div>
 		</div>
 		<!-- Version counter -->
-		<div id="version-counter">v0.2.5</div>
+		<div id="version-counter">v0.4.0</div>
 	</div>
 
 	<!-- Main application UI -->
@@ -35,10 +35,10 @@
 			<div class="panel" id="panel-1">
 				<div class="panel-header active" data-panel="1">
 					<i class="fa-solid fa-folder-open"></i>
-					<span>Console Output</span>
+					<span>Event Logs</span>
 				</div>
 				<div class="panel-content active" id="panel-content-1">
-					<!-- Content will be added dynamically -->
+					<!-- Content will be populated by eventTracker.js -->
 				</div>
 			</div>
 
@@ -48,7 +48,7 @@
 					<span>CV Embed</span>
 				</div>
 				<div class="panel-content" id="panel-content-2">
-					<!-- Content will be added dynamically -->
+					 <!-- CV content will be added dynamically -->
 				</div>
 			</div>
 
@@ -58,7 +58,7 @@
 					<span>Text Analysis</span>
 				</div>
 				<div class="panel-content" id="panel-content-3">
-					<!-- Content will be added dynamically -->
+					 <!-- Text analysis content will be added by textAnalysis.js -->
 				</div>
 			</div>
 		</div>
@@ -88,5 +88,6 @@
 	<!-- JavaScript files -->
 	<script type="module" src="js/main.js"></script>
 	<script type="module" src="js/panels.js"></script>
+	<script type="module" src="js/eventTracker.js"></script>
 </body>
 </html>

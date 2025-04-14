@@ -1,6 +1,9 @@
 // Main application logic
 import { initSlideshow, showImage, prevImage, nextImage } from './slideshow.js';
 import { initLoadingScreen, startLoadingAnimation } from './loader.js';
+import { initAudioPlayer } from './audio.js';
+import { initTextAnalysis } from './textAnalysis.js';
+// No need to explicitly import eventTracker as it sets up its own listeners on DOMContentLoaded
 
 document.addEventListener("DOMContentLoaded", function () {
     // Get elements
@@ -22,6 +25,12 @@ document.addEventListener("DOMContentLoaded", function () {
     
     // Initialize the loading screen
     initLoadingScreen(loadVideo);
+    
+    // Initialize the audio player
+    initAudioPlayer();
+    
+    // Initialize text analysis in panel 3
+    initTextAnalysis();
     
     // Load the video and handle errors
     function loadVideo() {

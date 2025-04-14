@@ -1,37 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta http-equiv="refresh" content="2; url=Export/index.html">
-  <title>Redirecting...</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background-color: #121212;
-      font-family: Arial, sans-serif;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-    }
-    .loading-text {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
-    a {
-      color: #ffffff;
-      text-decoration: underline;
-    }
-  </style>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Video to Images Slideshow</title>
+	<link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <div class="loading-text">LOADING...</div>
-  <p>If you are not redirected, 
-    <a href="Export/index.html">
-      click here
-    </a>.
-  </p>
+	<div id="loading-screen">
+		<div class="loading-content">
+			<h2>Loading Frames</h2>
+			<div class="progress-container">
+				<div id="progress-bar"></div>
+			</div>
+			<div id="loading-text">0% Complete</div>
+		</div>
+	</div>
+	<!-- Hidden video and canvas for frame extraction -->
+	<video id="source-video" src="video/WebVideo.mp4" style="display: none;" crossorigin="anonymous"></video>
+	<canvas id="hidden-canvas" style="display: none;"></canvas>
+	<div id="slideshow" style="display:none;">
+		<button id="prev">&larr;</button>
+		<img id="slide" src="" alt="Slideshow Image" />
+		<button id="next">&rarr;</button>
+		<div id="frame-counter">Frame: 1/0</div>
+	</div>
+	<script src="js/scripts.js"></script>
 </body>
 </html>

@@ -86,6 +86,12 @@ The project follows a modular architecture with separate concerns:
 - Support for keyboard shortcuts and scroll wheel
 
 ## Version History
+- v0.3.1
+  - Implemented true parallel loading of frames (up to 200 frames simultaneously)
+  - Fixed bug with frames 1066-1068 not displaying correctly
+  - Added special handling to skip problematic frames in the slideshow
+  - Increased batch size from 20 to 50 frames and process 4 batches concurrently
+  - Removed artificial delays between batch processing
 - v0.3.0
   - Major performance improvement: Removed video extraction completely
   - Now loading pre-extracted WebP frames directly from the frames folder

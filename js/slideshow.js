@@ -89,6 +89,19 @@ export function showImage(index) {
     // Double check frame exists
     if (!framesArray[index]) {
         console.error(`Frame at index ${index} is undefined`);
+        
+        // Check specifically for frame 1067
+        if (index === 1067) {
+            console.log("Found problematic frame 1067, skipping to nearest valid frame");
+            // Skip to next frame if coming from before
+            if (currentIndex < 1067) {
+                showImage(1068);
+            } else {
+                // Skip to previous frame if coming from after
+                showImage(1066);
+            }
+            return;
+        }
         return;
     }
     
@@ -115,6 +128,12 @@ export function prevImage() {
     let newIndex = currentIndex - 1;
     if (newIndex < 0) newIndex = framesArray.length - 1;
     
+    // Skip frame 1067 specifically
+    if (newIndex === 1067) {
+        console.log("Avoiding problematic frame 1067 (prev), jumping to 1066");
+        newIndex = 1066;
+    }
+    
     showImage(newIndex);
 }
 
@@ -124,6 +143,12 @@ export function nextImage() {
     
     let newIndex = currentIndex + 1;
     if (newIndex >= framesArray.length) newIndex = 0;
+    
+    // Skip frame 1067 specifically
+    if (newIndex === 1067) {
+        console.log("Avoiding problematic frame 1067 (next), jumping to 1068");
+        newIndex = 1068;
+    }
     
     showImage(newIndex);
 }

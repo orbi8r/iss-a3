@@ -112,6 +112,23 @@ document.addEventListener("DOMContentLoaded", function () {
         // Show completion message with a slight delay for the user to see it
         loadingText.textContent = `All frames loaded successfully! Starting slideshow...`;
         
+        // Ensure all images have proper src attributes before passing to slideshow
+        for (let i = 0; i < frameObjects.length; i++) {
+            if (!(frameObjects[i] instanceof HTMLImageElement)) {
+                // If we somehow have a non-image in the array, replace it with a valid image
+                const img = new Image();
+                img.src = `./frames/frame_${i.toString().padStart(4, '0')}.webp`;
+                frameObjects[i] = img;
+                console.warn(`Replaced invalid frame at index ${i} with new Image object`);
+            }
+            
+            // Double check the src attribute is set
+            if (frameObjects[i] && !frameObjects[i].src) {
+                frameObjects[i].src = `./frames/frame_${i.toString().padStart(4, '0')}.webp`;
+                console.warn(`Fixed missing src for frame ${i}`);
+            }
+        }
+        
         // Short delay before showing main content
         setTimeout(() => {
             // Hide loading screen and show app
@@ -120,7 +137,7 @@ document.addEventListener("DOMContentLoaded", function () {
             
             // Initialize slideshow with verified frame objects
             console.log(`Initializing slideshow with ${actuallyLoaded.length} verified frame objects`);
-            initSlideshow(actuallyLoaded);
+            initSlideshow(frameObjects);  // Pass the full array with all frames, even replaced ones
         }, 1500);
     }
 });

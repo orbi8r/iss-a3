@@ -11,9 +11,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const frameCounter = document.getElementById("frame-counter");
     const frames = [];
     let currentIndex = 0;
-    let frameInterval = 0.5; // seconds; adjust for more/less frames (smaller = more frames)
     let totalFrames = 0;
     let framesLoaded = 0;
+    
+    // FPS calculation
+    const videoFPS = 30; // We'll attempt to determine this from the video
 
     // Load the video and handle errors
     video.addEventListener("error", function(e) {
@@ -29,23 +31,38 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Video metadata loaded. Duration:", video.duration);
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
-        const duration = video.duration;
         
-        // Calculate timestamps for frame extraction
+        // Start the loading animation
+        startLoadingAnimation();
+        
+        // Request animation frame to extract frames
+        video.play();
+        video.addEventListener('playing', function() {
+            // If the browser supports it, try to get real video FPS
+            extractAllFrames();
+        });
+    });
+
+    function extractAllFrames() {
+        // Calculate frame time step based on FPS (assuming 30fps if not detected)
+        const frameTime = 1 / videoFPS;
+        video.pause();
+        
+        // Create an array of all frame times
         const timestamps = [];
-        for (let t = 0; t <= duration; t += frameInterval) {
-            timestamps.push(parseFloat(t.toFixed(2)));
+        for (let time = 0; time < video.duration; time += frameTime) {
+            timestamps.push(parseFloat(time.toFixed(3)));
         }
         
         totalFrames = timestamps.length;
-        console.log(`Will extract ${totalFrames} frames at ${frameInterval}s intervals`);
+        console.log(`Will extract ${totalFrames} frames at ${frameTime}s intervals (${videoFPS} fps)`);
         
         // Initialize slideshow frame counter
         frameCounter.textContent = "Frame: 0/" + totalFrames;
         
         // Start extracting frames
         extractFrames(timestamps);
-    });
+    }
 
     // Function to extract frames using Promise for better control
     function extractFrames(timestamps) {
@@ -53,6 +70,10 @@ document.addEventListener("DOMContentLoaded", function () {
             // All frames extracted. Initialize slideshow.
             loadingScreen.style.display = "none";
             slideshow.style.display = "flex";
+            
+            // Initialize the slider now that we know how many frames
+            initializeSlider(frames.length);
+            
             showImage(0);
             return;
         }
@@ -107,10 +128,36 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
+    // Initialize the slider element
+    function initializeSlider(frameCount) {
+        const sliderContainer = document.createElement('div');
+        sliderContainer.id = 'slider-container';
+        
+        const slider = document.createElement('input');
+        slider.type = 'range';
+        slider.id = 'frame-slider';
+        slider.min = 0;
+        slider.max = frameCount - 1;
+        slider.value = 0;
+        
+        slider.addEventListener('input', function() {
+            const frameIndex = parseInt(this.value);
+            showImage(frameIndex);
+        });
+        
+        sliderContainer.appendChild(slider);
+        slideshow.appendChild(sliderContainer);
+    }
+
     function showImage(index) {
+        if (index < 0 || index >= frames.length) return;
         slideElement.src = frames[index];
         currentIndex = index;
         frameCounter.textContent = `Frame: ${index + 1}/${frames.length}`;
+        
+        // Update slider if it exists
+        const slider = document.getElementById('frame-slider');
+        if (slider) slider.value = index;
     }
 
     // Add keyboard controls
@@ -121,6 +168,18 @@ document.addEventListener("DOMContentLoaded", function () {
             nextImage();
         }
     });
+
+    // Add wheel/scroll event for frame navigation
+    document.addEventListener("wheel", function(e) {
+        if (loadingScreen.style.display === "none") { // Only if loading is complete
+            if (e.deltaY > 0) {
+                nextImage(); // Scroll down - next frame
+            } else {
+                prevImage(); // Scroll up - previous frame
+            }
+            e.preventDefault(); // Prevent page scrolling
+        }
+    }, { passive: false });
 
     function prevImage() {
         if (!frames.length) return;
@@ -137,4 +196,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // Event listeners for navigation buttons
     document.getElementById("prev").addEventListener("click", prevImage);
     document.getElementById("next").addEventListener("click", nextImage);
+    
+    // Cute loading animation function
+    function startLoadingAnimation() {
+        const loadingAnimation = document.createElement('div');
+        loadingAnimation.id = 'loading-animation';
+        document.querySelector('.loading-content').prepend(loadingAnimation);
+        
+        // Animation is styled in CSS
+    }
 });

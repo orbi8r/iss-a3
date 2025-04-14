@@ -5,6 +5,7 @@ body {
 	background-color: #222;
 	color: #fff;
 	text-align: center;
+	overflow: hidden; /* Prevent scrollbars from appearing during wheel events */
 }
 
 #loading-screen {
@@ -23,6 +24,51 @@ body {
 .loading-content {
 	width: 80%;
 	max-width: 500px;
+}
+
+/* Cute loading animation */
+#loading-animation {
+	width: 100px;
+	height: 100px;
+	margin: 0 auto 20px;
+	position: relative;
+	perspective: 1000px;
+}
+
+#loading-animation:before {
+	content: '';
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	border: 5px solid transparent;
+	border-top-color: #4CAF50;
+	border-bottom-color: #FFC107;
+	animation: spinner 1.5s linear infinite, colorChange 3s ease-in-out infinite alternate;
+}
+
+#loading-animation:after {
+	content: '';
+	position: absolute;
+	width: 80%;
+	height: 80%;
+	top: 10%;
+	left: 10%;
+	border-radius: 50%;
+	border: 5px solid transparent;
+	border-left-color: #2196F3;
+	border-right-color: #F44336;
+	animation: spinner 1.2s linear infinite reverse, colorChange 3s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes spinner {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
+
+@keyframes colorChange {
+	0% { filter: hue-rotate(0deg); }
+	100% { filter: hue-rotate(360deg); }
 }
 
 .progress-container {
@@ -51,11 +97,12 @@ body {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	flex-direction: column;
 }
 
 #slideshow img {
 	max-width: 80%;
-	max-height: 80vh;
+	max-height: 70vh;
 	height: auto;
 	border: 5px solid #fff;
 	box-shadow: 0 0 20px rgba(0,0,0,0.8);
@@ -88,9 +135,49 @@ body {
 }
 
 #frame-counter {
-	position: absolute;
-	bottom: 20px;
+	margin: 10px 0;
 	background-color: rgba(0,0,0,0.5);
 	padding: 5px 10px;
 	border-radius: 5px;
+}
+
+/* Slider styles */
+#slider-container {
+	width: 80%;
+	margin: 15px auto;
+	padding: 10px;
+	background-color: rgba(0,0,0,0.3);
+	border-radius: 10px;
+}
+
+#frame-slider {
+	width: 100%;
+	height: 20px;
+	-webkit-appearance: none;
+	appearance: none;
+	background: #555;
+	outline: none;
+	border-radius: 10px;
+	overflow: hidden;
+	cursor: pointer;
+}
+
+#frame-slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 20px;
+	height: 20px;
+	background: #4CAF50;
+	cursor: pointer;
+	border-radius: 50%;
+	box-shadow: -407px 0 0 400px #4CAF50;
+}
+
+#frame-slider::-moz-range-thumb {
+	width: 20px;
+	height: 20px;
+	background: #4CAF50;
+	cursor: pointer;
+	border-radius: 50%;
+	box-shadow: -407px 0 0 400px #4CAF50;
 }

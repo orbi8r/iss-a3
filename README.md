@@ -86,6 +86,14 @@ The project follows a modular architecture with separate concerns:
 - Support for keyboard shortcuts and scroll wheel
 
 ## Version History
+- v0.3.3
+  - Added text analysis functionality in panel 3 (Q3)
+  - Comprehensive tokenization for pronouns, prepositions, and indefinite articles
+  - Complete text statistics with counts for letters, words, spaces, etc.
+- v0.3.2
+  - Added CV embed functionality in panel 2
+  - Implemented event tracking for Q2 requirements
+  - Event logs now display in the Console Output panel
 - v0.3.0
   - Major performance improvement: Removed video extraction completely
   - Now loading pre-extracted WebP frames directly from the frames folder
@@ -148,21 +156,21 @@ The project follows a modular architecture with separate concerns:
 - ✅ Include your profile picture and local pictures from your birthplace.
 - ✅ Write about your education background, schools, and achievements.
 - ✅ List your technical skills based on your level of expertise.
-- ❌ Include a CV as a PDF in a hyperlink.
+- ✅ Include a CV as a PDF in a hyperlink.
 
 #### Q2: JavaScript Event Tracking
-- ❌ Write a JavaScript function to capture all click events and page views.
-- ❌ Print the output in the console with the format: `Timestamp_of_click, type of event (click/view), event object (drop-down, image, text, etc.)`.
+- ✅ Write a JavaScript function to capture all click events and page views.
+- ✅ Print the output in the console with the format: `Timestamp_of_click, type of event (click/view), event object (drop-down, image, text, etc.)`.
 
 #### Q3: Text Analysis
-- ❌ Create a text box to input more than 10,000 words.
-- ❌ Calculate and display:
+- ✅ Create a text box to input more than 10,000 words.
+- ✅ Calculate and display:
   - Number of letters
   - Number of words
   - Number of spaces
   - Number of newlines
   - Number of special symbols
-- ❌ Tokenize the text and print:
+- ✅ Tokenize the text and print:
   - Count of pronouns grouped by pronouns
   - Count of prepositions grouped by prepositions
   - Count of indefinite articles grouped by articles

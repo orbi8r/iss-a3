@@ -2,6 +2,8 @@
 import { initSlideshow } from './slideshow.js';
 import { initLoadingScreen } from './loader.js';
 import { getPreloadedFrames } from './preloader.js';
+import './eventTracker.js'; // Import event tracker
+import { initTextAnalysis } from './textAnalysis.js'; // Import text analysis
 
 document.addEventListener("DOMContentLoaded", function () {
     // Get elements
@@ -12,6 +14,12 @@ document.addEventListener("DOMContentLoaded", function () {
     
     // Initialize the loading screen
     initLoadingScreen(loadFrames);
+    
+    // Initialize CV panel with embedded PDF
+    initCVPanel();
+    
+    // Initialize Text Analysis panel
+    initTextAnalysis();
     
     // Load frames directly from the preloaded WebP files
     function loadFrames() {
@@ -104,5 +112,21 @@ document.addEventListener("DOMContentLoaded", function () {
             // Start loading the first frame in the batch
             loadNextFrame();
         });
+    }
+    
+    // Function to initialize the CV panel with embedded PDF
+    function initCVPanel() {
+        const cvPanel = document.getElementById('panel-content-2');
+        if (cvPanel) {
+            // Create iframe to embed the PDF
+            const iframe = document.createElement('iframe');
+            iframe.src = 'resume/resume.pdf';
+            iframe.width = '100%';
+            iframe.height = '100%';
+            iframe.style.border = 'none';
+            
+            // Add iframe to the panel
+            cvPanel.appendChild(iframe);
+        }
     }
 });

@@ -162,3 +162,124 @@
         margin-right: 20px;
     }
 }
+
+/* Text analysis styles */
+.text-analysis-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 10px;
+}
+
+.input-section {
+    margin-bottom: 15px;
+}
+
+.input-section h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #7289da;
+}
+
+#text-input {
+    width: 100%;
+    min-height: 150px;
+    padding: 10px;
+    border: 1px solid #3a4459;
+    border-radius: 10px;
+    background-color: #1e2333;
+    color: #f0f0f0;
+    resize: vertical;
+    font-family: inherit;
+    margin-bottom: 10px;
+}
+
+.analyze-btn {
+    padding: 8px 15px;
+    background-color: #7289da;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.analyze-btn:hover {
+    background-color: #5e73c0;
+}
+
+.results-section {
+    flex: 1;
+    overflow-y: auto;
+    border: 1px solid #3a4459;
+    border-radius: 10px;
+    padding: 15px;
+    background-color: #1e2333;
+}
+
+.analysis-results {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.metrics-section, .token-section {
+    border-radius: 8px;
+    padding: 12px;
+    background-color: #282f41;
+}
+
+.metrics-section h3, .token-section h3 {
+    margin-top: 0;
+    color: #7289da;
+    margin-bottom: 10px;
+}
+
+.token-counts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.token-item {
+    background-color: #3a4459;
+    border-radius: 15px;
+    padding: 5px 10px;
+    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.token {
+    color: #f0f0f0;
+}
+
+.count {
+    margin-left: 5px;
+    color: #7289da;
+    font-weight: bold;
+}
+
+p.error {
+    color: #e57373;
+    font-weight: bold;
+}
+
+/* Styles for scrollbars in the token counts area */
+.token-counts::-webkit-scrollbar {
+    width: 8px;
+}
+
+.token-counts::-webkit-scrollbar-track {
+    background: #1e2333;
+    border-radius: 4px;
+}
+
+.token-counts::-webkit-scrollbar-thumb {
+    background: #3a4459;
+    border-radius: 4px;
+}

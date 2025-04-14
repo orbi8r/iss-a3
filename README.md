@@ -86,6 +86,11 @@ The project follows a modular architecture with separate concerns:
 - Support for keyboard shortcuts and scroll wheel
 
 ## Version History
+- v0.2.5
+  - Removed parallel frame loading technique due to ordering issues
+  - Implemented improved single-channel frame loading for better reliability
+  - Added additional logging for better troubleshooting
+  - Enhanced error handling for failed frame extractions
 - v0.2.4
   - Fixed horizontal scrollbar issue in panels by improving the CSS for dynamic sizing
   - Fixed frame ordering bug in parallel extraction to ensure proper frame sequence

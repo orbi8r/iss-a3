@@ -17,9 +17,6 @@ document.addEventListener("DOMContentLoaded", function () {
     
     // Configuration for optimization
     const videoFPS = 30;
-    const useWebWorkers = true; // Enable parallel processing
-    const workerCount = Math.min(navigator.hardwareConcurrency || 4, 8); // Limit max workers to 8
-    const batchSize = 5; // Number of frames to process in each batch
     const resolutionScale = 1.0; // 1.0 = full resolution, 0.5 = half resolution, etc.
     const imageQuality = 0.9; // Higher quality for WebP (0.0 to 1.0)
     
@@ -52,167 +49,18 @@ document.addEventListener("DOMContentLoaded", function () {
             if (playPromise !== undefined) {
                 playPromise.then(() => {
                     // Video playback started successfully
-                    if (useWebWorkers) {
-                        extractAllFramesParallel();
-                    } else {
-                        extractAllFrames();
-                    }
+                    extractAllFrames();
                 }).catch(error => {
                     // Auto-play was prevented
                     console.error("Play was prevented:", error);
                     // Provide a fallback method
-                    if (useWebWorkers) {
-                        extractAllFramesParallel();
-                    } else {
-                        extractAllFrames();
-                    }
+                    extractAllFrames();
                 });
             }
         });
     }
-    
-    // Parallel frame extraction using batches
-    function extractAllFramesParallel() {
-        // Calculate frame time step based on FPS
-        const frameTime = 1 / videoFPS;
-        video.pause();
-        
-        // Create an array of all frame times with their indices
-        const timestampsWithIndices = [];
-        let frameIndex = 0;
-        
-        for (let time = 0; time < video.duration; time += frameTime) {
-            timestampsWithIndices.push({
-                time: parseFloat(time.toFixed(3)),
-                index: frameIndex++
-            });
-        }
-        
-        totalFrames = timestampsWithIndices.length;
-        console.log(`Will extract ${totalFrames} frames at ${frameTime}s intervals (${videoFPS} fps) using ${workerCount} workers`);
-        
-        // Create batches of timestamps for parallel processing
-        // We'll sort them by time to help the video seek more efficiently
-        const batches = [];
-        for (let i = 0; i < timestampsWithIndices.length; i += batchSize) {
-            batches.push(timestampsWithIndices.slice(i, i + batchSize));
-        }
-        
-        // Track active workers
-        let activeWorkers = 0;
-        const maxWorkers = Math.min(workerCount, batches.length);
-        
-        // Function to start a new worker for a batch
-        function startWorkerForBatch() {
-            if (batches.length === 0) {
-                // Check if all workers are done
-                if (activeWorkers === 0) {
-                    console.log("All frames extracted");
-                    
-                    // Sort frames by their original index to maintain the correct order
-                    frames.sort((a, b) => a.index - b.index);
-                    
-                    // Finalize and show
-                    loadingScreen.style.display = "none";
-                    appContainer.style.display = "flex";
-                    
-                    // Initialize the slideshow with just the image data
-                    const imageDataOnly = frames.map(f => f.data);
-                    console.log(`Initializing slideshow with ${imageDataOnly.length} frames`);
-                    initSlideshow(imageDataOnly);
-                }
-                return;
-            }
-            
-            // Get the next batch
-            const batchTimestampsWithIndices = batches.shift();
-            activeWorkers++;
-            
-            // Process the batch
-            processBatch(batchTimestampsWithIndices, 0, []);
-        }
-        
-        // Function to process a batch of timestamps
-        function processBatch(batchTimestampsWithIndices, batchIndex, batchFrames) {
-            if (batchIndex >= batchTimestampsWithIndices.length) {
-                // Batch complete
-                // Add all frames from this batch
-                frames.push(...batchFrames);
-                
-                // Update progress
-                framesLoaded += batchFrames.length;
-                const progress = Math.round((framesLoaded / totalFrames) * 100);
-                progressBar.style.width = progress + "%";
-                loadingText.textContent = `${progress}% Complete (${framesLoaded}/${totalFrames} frames)`;
-                
-                // Start next batch
-                activeWorkers--;
-                startWorkerForBatch();
-                return;
-            }
-            
-            const { time, index } = batchTimestampsWithIndices[batchIndex];
-            
-            // Create a promise to handle the seeking and frame capture
-            const framePromise = new Promise((resolve, reject) => {
-                // Set up one-time event handler for when seeking is complete
-                const seekHandler = function() {
-                    video.removeEventListener("seeked", seekHandler);
-                    try {
-                        // Draw video frame to canvas
-                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                        
-                        // Store frame as data URL image using WebP for better compression
-                        const imageData = canvas.toDataURL("image/webp", imageQuality);
-                        
-                        batchFrames.push({
-                            index: index, // Use the exact index we assigned earlier
-                            data: imageData
-                        });
-                        
-                        resolve();
-                    } catch (err) {
-                        console.error("Error capturing frame at time " + time, err);
-                        reject(err);
-                    }
-                };
-                
-                video.addEventListener("seeked", seekHandler);
-                
-                // If seeking takes too long, we'll time out
-                setTimeout(() => {
-                    video.removeEventListener("seeked", seekHandler);
-                    reject(new Error("Timeout seeking to " + time));
-                }, 5000);
-                
-                // Seek to desired time
-                video.currentTime = time;
-            });
-            
-            // Process the next frame in this batch
-            framePromise
-                .then(() => {
-                    processBatch(batchTimestampsWithIndices, batchIndex + 1, batchFrames);
-                })
-                .catch(err => {
-                    console.error("Frame extraction error:", err);
-                    // Continue anyway, but add a placeholder for the failed frame
-                    // to maintain correct order
-                    batchFrames.push({
-                        index: index,
-                        data: null // This will be filtered out later
-                    });
-                    processBatch(batchTimestampsWithIndices, batchIndex + 1, batchFrames);
-                });
-        }
-        
-        // Start initial workers - but limit them to avoid overwhelming the system
-        for (let i = 0; i < maxWorkers; i++) {
-            startWorkerForBatch();
-        }
-    }
 
-    // Sequential frame extraction (fallback)
+    // Sequential frame extraction with improved reliability
     function extractAllFrames() {
         // Calculate frame time step based on FPS
         const frameTime = 1 / videoFPS;
@@ -225,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         
         totalFrames = timestamps.length;
-        console.log(`Will extract ${totalFrames} frames at ${frameTime}s intervals (${videoFPS} fps)`);
+        console.log(`Will extract ${totalFrames} frames at ${frameTime}s intervals (${videoFPS} fps) using single-channel loading`);
         
         // Start extracting frames
         extractFrames(timestamps);
@@ -235,11 +83,13 @@ document.addEventListener("DOMContentLoaded", function () {
     function extractFrames(timestamps) {
         if (timestamps.length === 0) {
             // All frames extracted. Initialize slideshow.
+            console.log("All frames extracted successfully. Starting slideshow...");
             loadingScreen.style.display = "none";
             appContainer.style.display = "flex";
             
             // Filter out any null frames
             const validFrames = frames.filter(frame => frame !== null);
+            console.log(`Initializing slideshow with ${validFrames.length} frames`);
             
             // Initialize the slideshow with the frames
             initSlideshow(validFrames);
@@ -263,8 +113,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 try {
                     // Draw video frame to canvas
                     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                    // Store frame as data URL image - use WebP instead of JPEG for better compression
-                    frames.push(canvas.toDataURL("image/webp", imageQuality));
+                    
+                    // Store frame as data URL image - use WebP for better compression
+                    const frameData = canvas.toDataURL("image/webp", imageQuality);
+                    frames.push(frameData);
+                    
                     resolve();
                 } catch (err) {
                     console.error("Error capturing frame at time " + time, err);
@@ -292,6 +145,8 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .catch(err => {
                 console.error("Frame extraction error:", err);
+                // Add null placeholder to maintain frame order
+                frames.push(null);
                 // Continue anyway to be resilient
                 extractFrames(timestamps);
             });

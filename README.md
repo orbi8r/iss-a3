@@ -85,6 +85,53 @@ The project follows a modular architecture with separate concerns:
 - Smooth slider for direct frame access
 - Support for keyboard shortcuts and scroll wheel
 
+## Version History
+- v0.3.3
+  - Added text analysis functionality in panel 3 (Q3)
+  - Comprehensive tokenization for pronouns, prepositions, and indefinite articles
+  - Complete text statistics with counts for letters, words, spaces, etc.
+- v0.3.2
+  - Added CV embed functionality in panel 2
+  - Implemented event tracking for Q2 requirements
+  - Event logs now display in the Console Output panel
+- v0.3.0
+  - Major performance improvement: Removed video extraction completely
+  - Now loading pre-extracted WebP frames directly from the frames folder
+  - Implemented batch loading system to prevent browser freezing
+  - Added detailed progress tracking for frame loading
+  - Significantly reduced initial loading time
+- v0.2.5
+  - Removed parallel frame loading technique due to ordering issues
+  - Implemented improved single-channel frame loading for better reliability
+  - Added additional logging for better troubleshooting
+  - Enhanced error handling for failed frame extractions
+- v0.2.4
+  - Fixed horizontal scrollbar issue in panels by improving the CSS for dynamic sizing
+  - Fixed frame ordering bug in parallel extraction to ensure proper frame sequence
+  - Improved worker management to prevent system overload during parallel processing
+  - Added more robust error handling for frame extraction failures
+  - Enhanced debugging with better console logging
+- v0.2.3
+  - Fixed panel layout to use individual rounded boxes
+  - Fixed issue with the 2034th frame by limiting to 2033 frames
+  - Improved navigation controls - tap for single frame, hold for 0.2s to start 60fps playback
+  - Enhanced button behavior to properly distinguish between taps and holds
+  - Optimized rendering using requestAnimationFrame for smoother playback
+  - Implemented WebP image format instead of JPG for better compression and faster loading
+  - Added frame preloading system to ensure smooth playback performance
+- v0.2.2 
+  - Redesigned panels as individual rounded boxes
+  - Added fast-forward/rewind functionality when holding buttons
+  - Fixed bug with last frame (2034th frame)
+  - Renamed to "Personal Portfolio"
+  - Added custom favicon
+  - Removed video-specific terminology
+- v0.2.1
+  - Updated version number display
+  - Scroll Bug Fix
+- v0.2.0
+  - Initial office-themed UI implementation
+
 ## How It Works
 1. User views the loading screen while content is prepared
 2. A progress bar shows loading status

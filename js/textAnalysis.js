@@ -170,32 +170,31 @@ function analyzeText(text) {
     };
 }
 
-// Function to generate HTML for the analysis results - improved UI
+// Function to generate HTML for the analysis results
 function generateAnalysisHTML(analysis) {
     let html = '<div class="analysis-results">';
     
     // Basic metrics
     html += '<div class="metrics-section">';
     html += '<h3>Basic Text Metrics</h3>';
-    html += '<div class="metrics-grid">';
-    html += `<div class="metric-item"><span class="metric-label">Letters:</span> <span class="metric-value">${analysis.metrics.letters}</span></div>`;
-    html += `<div class="metric-item"><span class="metric-label">Words:</span> <span class="metric-value">${analysis.metrics.words}</span></div>`;
-    html += `<div class="metric-item"><span class="metric-label">Spaces:</span> <span class="metric-value">${analysis.metrics.spaces}</span></div>`;
-    html += `<div class="metric-item"><span class="metric-label">Newlines:</span> <span class="metric-value">${analysis.metrics.newlines}</span></div>`;
-    html += `<div class="metric-item"><span class="metric-label">Special Symbols:</span> <span class="metric-value">${analysis.metrics.specialSymbols}</span></div>`;
-    html += '</div></div>';
+    html += `<p>Letters: ${analysis.metrics.letters}</p>`;
+    html += `<p>Words: ${analysis.metrics.words}</p>`;
+    html += `<p>Spaces: ${analysis.metrics.spaces}</p>`;
+    html += `<p>Newlines: ${analysis.metrics.newlines}</p>`;
+    html += `<p>Special Symbols: ${analysis.metrics.specialSymbols}</p>`;
+    html += '</div>';
     
     // Pronouns
     html += '<div class="token-section">';
     html += '<h3>Pronouns</h3>';
     html += '<div class="token-counts">';
     if (Object.keys(analysis.pronounCounts).length === 0) {
-        html += '<p class="no-results">No pronouns found</p>';
+        html += '<p>No pronouns found</p>';
     } else {
         Object.entries(analysis.pronounCounts)
             .sort(([, a], [, b]) => b - a)
             .forEach(([pronoun, count]) => {
-                html += `<div class="token-item"><span class="token">${pronoun}</span> <span class="count">${count}</span></div>`;
+                html += `<div class="token-item"><span class="token">${pronoun}</span>: <span class="count">${count}</span></div>`;
             });
     }
     html += '</div></div>';
@@ -205,12 +204,12 @@ function generateAnalysisHTML(analysis) {
     html += '<h3>Prepositions</h3>';
     html += '<div class="token-counts">';
     if (Object.keys(analysis.prepositionCounts).length === 0) {
-        html += '<p class="no-results">No prepositions found</p>';
+        html += '<p>No prepositions found</p>';
     } else {
         Object.entries(analysis.prepositionCounts)
             .sort(([, a], [, b]) => b - a)
             .forEach(([preposition, count]) => {
-                html += `<div class="token-item"><span class="token">${preposition}</span> <span class="count">${count}</span></div>`;
+                html += `<div class="token-item"><span class="token">${preposition}</span>: <span class="count">${count}</span></div>`;
             });
     }
     html += '</div></div>';
@@ -220,12 +219,12 @@ function generateAnalysisHTML(analysis) {
     html += '<h3>Indefinite Articles</h3>';
     html += '<div class="token-counts">';
     if (Object.keys(analysis.articleCounts).length === 0) {
-        html += '<p class="no-results">No indefinite articles found</p>';
+        html += '<p>No indefinite articles found</p>';
     } else {
         Object.entries(analysis.articleCounts)
             .sort(([, a], [, b]) => b - a)
             .forEach(([article, count]) => {
-                html += `<div class="token-item"><span class="token">${article}</span> <span class="count">${count}</span></div>`;
+                html += `<div class="token-item"><span class="token">${article}</span>: <span class="count">${count}</span></div>`;
             });
     }
     html += '</div></div>';
@@ -239,24 +238,16 @@ function initTextAnalysis() {
     const textAnalysisPanel = document.getElementById('panel-content-3');
     if (!textAnalysisPanel) return;
     
-    // Create UI elements with improved UI
+    // Create UI elements
     const analysisUI = `
         <div class="text-analysis-container">
             <div class="input-section">
-                <h3>Text Analysis Tool</h3>
-                <p class="input-instructions">Enter or paste text below to analyze language patterns and metrics.</p>
+                <h3>Text Analysis (Enter at least 10,000 words)</h3>
                 <textarea id="text-input" placeholder="Paste or type your text here..." rows="10"></textarea>
-                <div class="button-container">
-                    <button id="analyze-button" class="analyze-btn">
-                        <i class="fas fa-chart-bar"></i> Analyze Text
-                    </button>
-                    <button id="clear-button" class="clear-btn">
-                        <i class="fas fa-eraser"></i> Clear
-                    </button>
-                </div>
+                <button id="analyze-button" class="analyze-btn">Analyze Text</button>
             </div>
             <div id="analysis-results" class="results-section">
-                <p class="intro-text">Analysis results will appear here after you analyze text.</p>
+                <p>Analysis results will appear here after you analyze text.</p>
             </div>
         </div>
     `;
@@ -278,12 +269,6 @@ function initTextAnalysis() {
         
         // Display the results
         document.getElementById('analysis-results').innerHTML = generateAnalysisHTML(analysis);
-    });
-    
-    // Add event listener to the clear button
-    document.getElementById('clear-button').addEventListener('click', function() {
-        document.getElementById('text-input').value = '';
-        document.getElementById('analysis-results').innerHTML = '<p class="intro-text">Analysis results will appear here after you analyze text.</p>';
     });
 }
 

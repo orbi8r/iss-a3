@@ -48,18 +48,18 @@
     margin-left: auto;
 }
 
-/* Footer music section for loading screen - wider to accommodate messages */
+/* Footer music section for loading screen - standardized corner radius */
 .footer-music-loading {
     position: absolute;
     bottom: 30px;
     left: 50%;
-    transform: translateX(-50%) scale(1);
+    transform: translateX(-50%);
     opacity: 1;
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: rgba(30, 33, 38, 0.7);
-    border-radius: 15px;
+    border-radius: 20px; /* Standardized to match other elements */
     padding: 10px 20px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);
@@ -69,6 +69,8 @@
     min-width: 300px; /* Set minimum width to ensure space for messages */
     max-width: 600px; /* Maximum width to prevent overly wide panel */
     z-index: 1001;
+    /* Remove all hover effects to prevent movement */
+    transform-style: initial !important;
 }
 
 /* Music controls in loading screen */
@@ -94,11 +96,10 @@
     display: inline-block;
     color: #7289da;
     font-weight: 500;
-    transition: all 0.5s ease;
-    animation: message-fade 5s ease infinite;
     padding: 5px 10px;
     border-radius: 4px;
     text-align: center;
+    font-size: 16px;
 }
 
 /* Animation for message transition */

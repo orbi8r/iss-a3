@@ -45,14 +45,14 @@
     z-index: 10;
 }
 
-/* Dynamic island scroll control - updated to match video width */
+/* Dynamic island scroll control - updated for consistent corner radius */
 .scroll-control {
     width: 100%; /* Same width as content-frame */
     margin-top: 15px;
     display: flex;
     align-items: center;
     background-color: rgba(30, 33, 38, 0.85);
-    border-radius: 50px;
+    border-radius: 20px; /* Standardized to match other elements */
     padding: 10px 20px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     backdrop-filter: blur(10px);
@@ -129,7 +129,7 @@
     border: 2px solid #fff;
 }
 
-/* Footer section for music controls and copyright - updated to match scroll control */
+/* Footer section for music controls and copyright - updated for consistent corner radius */
 .footer-section {
     width: 100%;
     margin-top: 15px;
@@ -137,8 +137,8 @@
     justify-content: space-between;
     align-items: center;
     background-color: rgba(30, 33, 38, 0.85);
-    border-radius: 50px; /* Increased from 20px to match scroll-control */
-    padding: 10px 20px; /* Adjusted padding to match scroll-control */
+    border-radius: 20px; /* Standardized to match other elements */
+    padding: 10px 20px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);

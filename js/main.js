@@ -296,18 +296,22 @@ function displayFrame(frameIndex) {
 
 // Go to the previous frame
 function prevFrame() {
-    if (currentFrame > 1) {
-        currentFrame--;
-        displayFrame(currentFrame);
+    currentFrame--;
+    // Loop to the end if we go before the first frame
+    if (currentFrame < 1) {
+        currentFrame = totalFrames;
     }
+    displayFrame(currentFrame);
 }
 
 // Go to the next frame
 function nextFrame() {
-    if (currentFrame < totalFrames) {
-        currentFrame++;
-        displayFrame(currentFrame);
+    currentFrame++;
+    // Loop to the beginning if we go past the last frame
+    if (currentFrame > totalFrames) {
+        currentFrame = 1;
     }
+    displayFrame(currentFrame);
 }
 
 // Handle keyboard navigation with arrow keys

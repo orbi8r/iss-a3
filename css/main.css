@@ -327,3 +327,21 @@ body {
     50% { transform: translateY(-10px); }
     100% { transform: translateY(0px); }
 }
+
+/* Override animations for text elements except EST */
+#loading-screen h2,
+#loading-text,
+.wholesome-message,
+.copyright-info,
+.panel-header span {
+    animation: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    outline: none !important;
+    transform: none !important;
+}
+
+/* Only apply pulse animation to EST time */
+#loading-est {
+    animation: pulse 2s infinite !important;
+}

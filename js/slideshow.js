@@ -279,131 +279,114 @@ function setupEventListeners() {
         }
     });
 
-    // Get navigation buttons
+    // Event listeners for navigation buttons with mousedown/mouseup for continuous playback
     const prevButton = document.getElementById("prev");
     const nextButton = document.getElementById("next");
     
-    // Completely revised button hold implementation
-    if (prevButton && nextButton) {
-        // Variables to track button state
-        let isPrevButtonDown = false;
-        let isNextButtonDown = false;
-        let prevButtonHoldTimer = null;
-        let nextButtonHoldTimer = null;
+    // Improved button hold functionality - more reliable implementation
+    function setupButtonHold(button, direction) {
+        let holdStartTime = 0;
+        let holdActive = false;
         
-        // Previous button handlers
-        prevButton.addEventListener("mousedown", function() {
-            isPrevButtonDown = true;
-            prevImage(); // Show one frame immediately
+        // On mousedown - start timing the hold
+        button.addEventListener("mousedown", function(e) {
+            if (e.button !== 0) return; // Only left mouse button
             
-            // Clear any existing timers
-            if (prevButtonHoldTimer) clearTimeout(prevButtonHoldTimer);
-            
-            // Set timer for continuous playback after holdThreshold
-            prevButtonHoldTimer = setTimeout(function() {
-                if (isPrevButtonDown) {
-                    console.log("Starting fast backward playback");
-                    startPlayback(-1); // Start continuous backward playback
-                }
-            }, holdThreshold);
-        });
-        
-        // Next button handlers
-        nextButton.addEventListener("mousedown", function() {
-            isNextButtonDown = true;
-            nextImage(); // Show one frame immediately
-            
-            // Clear any existing timers
-            if (nextButtonHoldTimer) clearTimeout(nextButtonHoldTimer);
-            
-            // Set timer for continuous playback after holdThreshold
-            nextButtonHoldTimer = setTimeout(function() {
-                if (isNextButtonDown) {
-                    console.log("Starting fast forward playback");
-                    startPlayback(1); // Start continuous forward playback
-                }
-            }, holdThreshold);
-        });
-        
-        // Add global mouseup listener to handle release anywhere on the page
-        document.addEventListener("mouseup", function() {
-            // Handle prev button release
-            if (isPrevButtonDown) {
-                isPrevButtonDown = false;
-                if (prevButtonHoldTimer) {
-                    clearTimeout(prevButtonHoldTimer);
-                    prevButtonHoldTimer = null;
-                }
-                stopPlayback();
+            // Immediately show one frame
+            if (direction === -1) {
+                prevImage();
+            } else {
+                nextImage();
             }
             
-            // Handle next button release
-            if (isNextButtonDown) {
-                isNextButtonDown = false;
-                if (nextButtonHoldTimer) {
-                    clearTimeout(nextButtonHoldTimer);
-                    nextButtonHoldTimer = null;
-                }
+            // Record start time and clear any existing timers
+            holdStartTime = Date.now();
+            holdActive = true;
+            clearHoldTimer();
+            
+            // Set the hold timer
+            buttonHoldTimer = setTimeout(function() {
+                console.log(`Button held for ${holdThreshold}ms - starting fast ${direction === 1 ? 'forward' : 'rewind'}`);
+                startPlayback(direction);
+            }, holdThreshold);
+        });
+        
+        // On mouseup - determine if it was a click or a hold
+        button.addEventListener("mouseup", function(e) {
+            if (e.button !== 0) return; // Only left mouse button
+            
+            const holdDuration = Date.now() - holdStartTime;
+            clearHoldTimer();
+            
+            // If hold was active but not long enough for playback, treat as regular click
+            if (holdActive && holdDuration < holdThreshold) {
+                // Click already triggered the single frame advance in mousedown
+            }
+            
+            // Reset state and stop any playback
+            holdActive = false;
+            stopPlayback();
+        });
+        
+        // Handle mouseleave to prevent playback continuing if mouse leaves button
+        button.addEventListener("mouseleave", function() {
+            if (holdActive) {
+                clearHoldTimer();
+                holdActive = false;
                 stopPlayback();
             }
         });
         
-        // Also handle touch events for mobile devices
-        prevButton.addEventListener("touchstart", function(e) {
+        // Touch events for mobile
+        button.addEventListener("touchstart", function(e) {
+            e.preventDefault(); // Prevent default touch behavior
+            
+            // Immediately show one frame
+            if (direction === -1) {
+                prevImage();
+            } else {
+                nextImage();
+            }
+            
+            // Record start time and clear any existing timers
+            holdStartTime = Date.now();
+            holdActive = true;
+            clearHoldTimer();
+            
+            // Set the hold timer
+            buttonHoldTimer = setTimeout(function() {
+                console.log(`Button held for ${holdThreshold}ms - starting fast ${direction === 1 ? 'forward' : 'rewind'}`);
+                startPlayback(direction);
+            }, holdThreshold);
+        });
+        
+        button.addEventListener("touchend", function(e) {
             e.preventDefault();
-            isPrevButtonDown = true;
-            prevImage(); // Show one frame immediately
             
-            // Clear any existing timers
-            if (prevButtonHoldTimer) clearTimeout(prevButtonHoldTimer);
+            const holdDuration = Date.now() - holdStartTime;
+            clearHoldTimer();
             
-            // Set timer for continuous playback after holdThreshold
-            prevButtonHoldTimer = setTimeout(function() {
-                if (isPrevButtonDown) {
-                    console.log("Starting fast backward playback (touch)");
-                    startPlayback(-1); // Start continuous backward playback
-                }
-            }, holdThreshold);
-        });
-        
-        nextButton.addEventListener("touchstart", function(e) {
-            e.preventDefault();
-            isNextButtonDown = true;
-            nextImage(); // Show one frame immediately
-            
-            // Clear any existing timers
-            if (nextButtonHoldTimer) clearTimeout(nextButtonHoldTimer);
-            
-            // Set timer for continuous playback after holdThreshold
-            nextButtonHoldTimer = setTimeout(function() {
-                if (isNextButtonDown) {
-                    console.log("Starting fast forward playback (touch)");
-                    startPlayback(1); // Start continuous forward playback
-                }
-            }, holdThreshold);
-        });
-        
-        // Handle touch end events
-        document.addEventListener("touchend", function() {
-            // Handle prev button release
-            if (isPrevButtonDown) {
-                isPrevButtonDown = false;
-                if (prevButtonHoldTimer) {
-                    clearTimeout(prevButtonHoldTimer);
-                    prevButtonHoldTimer = null;
-                }
-                stopPlayback();
+            // If hold was active but not long enough for playback, treat as regular tap
+            if (holdActive && holdDuration < holdThreshold) {
+                // Touch already triggered the single frame advance in touchstart
             }
             
-            // Handle next button release
-            if (isNextButtonDown) {
-                isNextButtonDown = false;
-                if (nextButtonHoldTimer) {
-                    clearTimeout(nextButtonHoldTimer);
-                    nextButtonHoldTimer = null;
-                }
+            // Reset state and stop any playback
+            holdActive = false;
+            stopPlayback();
+        });
+        
+        button.addEventListener("touchcancel", function(e) {
+            e.preventDefault();
+            if (holdActive) {
+                clearHoldTimer();
+                holdActive = false;
                 stopPlayback();
             }
         });
     }
+    
+    // Set up the improved hold functionality for both buttons
+    setupButtonHold(prevButton, -1); // Previous button (rewind)
+    setupButtonHold(nextButton, 1);  // Next button (fast-forward)
 }

@@ -1,9 +1,6 @@
 # Personal Portfolio
 
-Live Website: [https://orbi8r.github.io/iss-a3/](https://orbi8r.github.io/iss-a3/)
-
 Assignment 3, Intro to Software Systems - IIIT Hyderabad
-2024111017 - Shuban Biswas (orbi8r)
 
 ## Project Overview
 This application showcases a personal portfolio with an intuitive, office-themed interface. Key features include:
@@ -15,7 +12,6 @@ This application showcases a personal portfolio with an intuitive, office-themed
 - Keyboard and scroll wheel navigation
 - Animated loading screen with progress tracking
 - Responsive design that works on displays from standard to 8K resolution
-- Custom 3D office tour video created with Godot Engine and GDScript
 
 ## File Structure
 The project follows a modular architecture with separate concerns:
@@ -23,7 +19,6 @@ The project follows a modular architecture with separate concerns:
 ### Main Files
 - `index.html` - Main entry point for the application
 - `README.md` - Project documentation (this file)
-- `LICENSE` - License information
 
 ### JavaScript Files
 - `js/main.js` - Core application logic
@@ -46,23 +41,6 @@ The project follows a modular architecture with separate concerns:
   - Controls the expandable side panels
   - Handles panel animations and state management
 
-- `js/audio.js` - Audio player functionality
-  - Controls background music playback
-  - Manages audio toggle and state
-  - Handles wholesome message rotation
-
-- `js/eventTracker.js` - User interaction tracking
-  - Logs all user interactions
-  - Records page views, clicks, and events
-  - Displays event history in a dedicated panel
-
-- `js/textAnalysis.js` - Text analysis functionality
-  - Provides comprehensive text metrics
-  - Analyzes language patterns
-  - Identifies and counts pronouns, prepositions, and articles
-
-- `js/scripts.js` - Additional helper scripts
-
 ### CSS Files
 - `css/main.css` - Core application styles
   - Contains global styling and variables
@@ -82,17 +60,9 @@ The project follows a modular architecture with separate concerns:
   - Rounded panel styling and animations
   - Panel header and content areas
 
-- `css/styles.css` - Additional global styles
-
 ### Media and Documents
 - `video/WebVideo.mp4` - Source frames for the presentation
 - `resume/resume.pdf` - CV for embedding in panel 2
-- `music/C418-HauntMuskie.mp3` - Background music track
-
-### Submission Files
-- `submission/README.txt` - Submission documentation
-- `submission/submission.txt` - Submission details
-- `2024111017.zip` - Zipped project for submission
 
 ## Interface Features
 

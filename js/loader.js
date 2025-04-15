@@ -59,8 +59,8 @@ export function initLoadingScreen(onStartCallback) {
     });
 }
 
-// Create the loading animation
-export function startLoadingAnimation() {
+// Create the film strip loading animation
+export function createFilmStripAnimation() {
     const loadingAnimation = document.createElement('div');
     loadingAnimation.id = 'loading-animation';
     

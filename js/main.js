@@ -1,7 +1,7 @@
 // Main application logic
 import { initSlideshow, showImage, prevImage, nextImage } from './slideshow.js';
 import { initLoadingScreen, startLoadingAnimation } from './loader.js';
-import { initAudioPlayer, toggleMusic, initAudio } from './audio.js';
+import { initAudioPlayer, toggleMusic } from './audio.js';
 import { initTextAnalysis } from './textAnalysis.js';
 // No need to explicitly import eventTracker as it sets up its own listeners on DOMContentLoaded
 
@@ -21,27 +21,37 @@ document.addEventListener("DOMContentLoaded", function () {
 // Initialize audio, video extraction, and UI
 function initApp() {
     // Initialize audio controls
-    initAudio();
+    initAudioPlayer();
 
     // Set up audio toggle buttons for both screens
     const mainMusicToggle = document.getElementById('music-toggle');
     const loadingMusicToggle = document.getElementById('loading-music-toggle');
     
-    mainMusicToggle.addEventListener('click', toggleMusic);
-    loadingMusicToggle.addEventListener('click', toggleMusic);
+    if (mainMusicToggle) {
+        mainMusicToggle.addEventListener('click', toggleMusic);
+    }
+    
+    if (loadingMusicToggle) {
+        loadingMusicToggle.addEventListener('click', toggleMusic);
+    }
 
     // Initialize video and canvas
     video = document.getElementById("source-video");
     canvas = document.getElementById("hidden-canvas");
     context = canvas.getContext("2d");
 
-    // Set loading start time
-    startTime = performance.now();
-
-    // Initialize video once it's loaded
-    video.addEventListener("loadeddata", () => {
-        initVideoExtraction();
+    // Add start button to begin extraction
+    const loadingContent = document.querySelector('.loading-content');
+    const startButton = document.createElement('button');
+    startButton.className = 'start-button';
+    startButton.textContent = 'Start Loading';
+    startButton.addEventListener('click', () => {
+        startButton.remove(); // Remove button after click
+        startTime = performance.now(); // Set loading start time
+        initVideoExtraction(); // Start video extraction
+        toggleMusic(); // Start playing music
     });
+    loadingContent.appendChild(startButton);
 
     // Add mouse move event for hover effects
     document.addEventListener("mousemove", handleMouseMove);
@@ -142,35 +152,44 @@ function extractFrames() {
     extract();
 }
 
-// Calculate and display estimated loading time
+// Ensure EST is always right-aligned and visually clear
 function updateEstimatedTime(currentIndex, totalFrames) {
     const currentTime = performance.now();
     const elapsedTime = (currentTime - startTime) / 1000; // in seconds
-    
-    // Calculate estimated total time based on progress so far
     if (currentIndex > 0) {
         const timePerFrame = elapsedTime / currentIndex;
         const remainingFrames = totalFrames - currentIndex;
         const estimatedRemainingTime = remainingFrames * timePerFrame;
-        
-        // Format the time
         const minutes = Math.floor(estimatedRemainingTime / 60);
         const seconds = Math.floor(estimatedRemainingTime % 60);
         const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        
-        document.getElementById('loading-est').textContent = `EST: ${formattedTime}`;
+        const estElem = document.getElementById('loading-est');
+        if (estElem) {
+            estElem.textContent = `EST: ${formattedTime}`;
+            estElem.style.textAlign = 'right';
+            estElem.style.fontWeight = 'bold';
+        }
+    }
+}
+
+// Animate the music panel from loading to main screen
+function animateMusicPanelToMain() {
+    const musicPanel = document.querySelector('.footer-music-loading');
+    if (musicPanel) {
+        musicPanel.classList.add('animate-to-main');
+        // After animation, hide the loading music panel and show the main footer
+        setTimeout(() => {
+            musicPanel.style.display = 'none';
+            const mainFooter = document.querySelector('.footer-section');
+            if (mainFooter) mainFooter.style.opacity = '1';
+        }, 1000); // Match CSS transition duration
     }
 }
 
 // Complete the loading process and show the main application
 function completeLoading() {
     loadingComplete = true;
-    
-    // Create a reference to the music control in loading screen
-    const musicPanel = document.querySelector('.footer-music-loading');
-    
-    // Animate the music panel to its final position
-    musicPanel.classList.add('animate-to-main');
+    animateMusicPanelToMain();
     
     // Fade out loading screen
     const loadingScreen = document.getElementById('loading-screen');

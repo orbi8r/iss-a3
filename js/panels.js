@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     content.classList.add('active');
                     panel.classList.add('active');
                     
-                    // Make sure panel content has scrollable-content wrapper
+                    // Update scrollable contents
                     ensureScrollableContent(content);
                 }
             } else {
@@ -52,15 +52,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Initial setup of scrollable wrappers
-    setupScrollableContent();
+    setupPanelContents();
     
     // Embed CV in Panel 2
     loadCV();
+    
+    // Initialize Text Analysis in Panel 3
+    initializeTextAnalysis();
+    
+    // Set up event logs in Panel 1
+    initializeEventLogs();
 });
 
 // Make sure all active panels have scrollable-content wrappers
-function setupScrollableContent() {
-    const activeContents = document.querySelectorAll('.panel-content.active');
+function setupPanelContents() {
+    const activeContents = document.querySelectorAll('.panel-content');
     activeContents.forEach(content => {
         ensureScrollableContent(content);
     });
@@ -84,10 +90,47 @@ function ensureScrollableContent(panelContent) {
     }
 }
 
+// Initialize Event Logs in Panel 1
+function initializeEventLogs() {
+    const panel = document.getElementById('panel-content-1');
+    if (!panel) return;
+    
+    // Get or create scrollable container
+    let scrollableContent = panel.querySelector('.scrollable-content');
+    if (!scrollableContent) {
+        scrollableContent = document.createElement('div');
+        scrollableContent.className = 'scrollable-content';
+        panel.appendChild(scrollableContent);
+    }
+    
+    // Create a container for event logs with proper bounding
+    const logsContainer = document.createElement('div');
+    logsContainer.className = 'event-logs-container';
+    scrollableContent.appendChild(logsContainer);
+}
+
+// Initialize Text Analysis in Panel 3
+function initializeTextAnalysis() {
+    // This is handled by textAnalysis.js
+    // We're just ensuring the panel structure is correct
+    const panel = document.getElementById('panel-content-3');
+    if (!panel) return;
+    
+    ensureScrollableContent(panel);
+}
+
 // Function to load CV into panel 2
 function loadCV() {
     const cvPanel = document.getElementById('panel-content-2');
     if (!cvPanel) return;
+    
+    // Get or create scrollable container
+    let scrollableContent = cvPanel.querySelector('.scrollable-content');
+    if (!scrollableContent) {
+        scrollableContent = document.createElement('div');
+        scrollableContent.className = 'scrollable-content';
+        cvPanel.appendChild(scrollableContent);
+    }
     
     // Create a container for the embedded CV content
     const cvContainer = document.createElement('div');
@@ -105,37 +148,22 @@ function loadCV() {
         </div>
     `;
     
-    // Create CV embed
+    // Create CV embed (PDF only)
+    const cvWrapper = document.createElement('div');
+    cvWrapper.className = 'cv-wrapper';
     const cvEmbed = document.createElement('embed');
     cvEmbed.src = './resume/resume.pdf';
     cvEmbed.type = 'application/pdf';
     cvEmbed.className = 'cv-embed';
-    
-    // Add fallback message for browsers that don't support embedding PDFs
-    const fallbackMessage = document.createElement('p');
+    // Simple fallback message
+    const fallbackMessage = document.createElement('div');
     fallbackMessage.className = 'cv-fallback';
     fallbackMessage.innerHTML = `
-        <i class="fas fa-exclamation-triangle"></i> 
-        Your browser doesn't support embedded PDFs. 
-        <a href="./resume/resume.pdf" target="_blank">Click here to view the CV</a>.
+        <p>Your browser doesn't support embedded PDFs. <a href="./resume/resume.pdf" target="_blank">Click here to view the CV</a>.</p>
     `;
-    
-    // Create a wrapper div
-    const embedWrapper = document.createElement('div');
-    embedWrapper.className = 'cv-wrapper';
-    
-    // Add objects to the panel
-    embedWrapper.appendChild(cvEmbed);
-    embedWrapper.appendChild(fallbackMessage);
-    
-    cvPreview.appendChild(embedWrapper);
+    cvWrapper.appendChild(cvEmbed);
+    cvWrapper.appendChild(fallbackMessage);
+    cvPreview.appendChild(cvWrapper);
     cvContainer.appendChild(cvPreview);
-    
-    // Find the scrollable-content wrapper or create one
-    let scrollableContent = cvPanel.querySelector('.scrollable-content');
-    if (scrollableContent) {
-        scrollableContent.appendChild(cvContainer);
-    } else {
-        cvPanel.appendChild(cvContainer);
-    }
+    scrollableContent.appendChild(cvContainer);
 }

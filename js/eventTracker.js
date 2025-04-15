@@ -35,6 +35,8 @@ function getElementType(element) {
     if (element.classList.contains('panel-header')) return 'panel header';
     if (element.classList.contains('control-button')) return 'control button';
     if (element.id === 'frame-slider') return 'slider';
+    if (element.id === 'music-toggle' || element.id === 'loading-music-toggle') return 'music toggle';
+    if (element.classList.contains('start-button')) return 'start button';
     
     // If no specific type is identified, return the tag name
     return element.tagName.toLowerCase();
@@ -52,12 +54,20 @@ function updateConsolePanel() {
             consolePanel.appendChild(scrollableContent);
         }
         
+        // Get or create event logs container
+        let logsContainer = scrollableContent.querySelector('.event-logs-container');
+        if (!logsContainer) {
+            logsContainer = document.createElement('div');
+            logsContainer.className = 'event-logs-container';
+            scrollableContent.appendChild(logsContainer);
+        }
+        
         // Create formatted HTML from logs
         const logsHtml = eventLogs.map(log => `<div class="log-entry">${log}</div>`).join('');
-        scrollableContent.innerHTML = `<div class="event-logs">${logsHtml}</div>`;
+        logsContainer.innerHTML = `<div class="event-logs">${logsHtml}</div>`;
         
         // Auto-scroll to bottom of logs
-        scrollableContent.scrollTop = scrollableContent.scrollHeight;
+        logsContainer.scrollTop = logsContainer.scrollHeight;
     }
 }
 
@@ -73,11 +83,32 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Track scroll events on panels
     document.addEventListener('wheel', function(event) {
-        const target = event.target.closest('.scrollable-content');
-        if (target) {
-            logEvent('scroll', target);
+        // Find the closest scrollable parent
+        let scrollableParent = null;
+        let element = event.target;
+        
+        while (element && !scrollableParent) {
+            if (element.classList && 
+                (element.classList.contains('scrollable-content') || 
+                 element.classList.contains('event-logs-container') ||
+                 element.classList.contains('results-section'))) {
+                scrollableParent = element;
+            }
+            element = element.parentElement;
         }
-    });
+        
+        if (scrollableParent) {
+            // Only log once in a while to avoid flooding logs
+            if (Math.random() < 0.1) { // 10% chance to log scroll events
+                logEvent('scroll', scrollableParent);
+            }
+        } else {
+            // If scrolling in main area, log as slideshow scroll
+            if (Math.random() < 0.1) { // 10% chance to log scroll events
+                logEvent('slideshow_scroll', event.target);
+            }
+        }
+    }, { passive: true });
     
     // Track mouse movement for hover effects
     let lastLogTime = 0;
@@ -88,6 +119,25 @@ document.addEventListener('DOMContentLoaded', function() {
             logEvent('mousemove', event.target);
             lastLogTime = now;
         }
+    });
+    
+    // Track music toggle
+    const musicToggles = [
+        document.getElementById('music-toggle'),
+        document.getElementById('loading-music-toggle')
+    ];
+    
+    musicToggles.forEach(toggle => {
+        if (toggle) {
+            toggle.addEventListener('click', function() {
+                logEvent('music_toggle', toggle);
+            });
+        }
+    });
+    
+    // Track when loading completes
+    window.addEventListener('load', function() {
+        logEvent('page_loaded', document.body);
     });
 });
 

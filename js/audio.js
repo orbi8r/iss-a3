@@ -5,27 +5,39 @@ const audioElement = document.getElementById('background-music');
 // Initialize the audio player
 export function initAudioPlayer() {
     // Make sure audio volume is reasonable
-    audioElement.volume = 0.5;
+    if (audioElement) {
+        audioElement.volume = 0.5;
+    }
 
-    // Set up music toggle button event listener
+    // Set up music toggle button event listeners when DOM is loaded
     document.addEventListener('DOMContentLoaded', () => {
+        // Main screen music toggle
         const musicToggle = document.getElementById('music-toggle');
         if (musicToggle) {
             musicToggle.addEventListener('click', toggleMusic);
-            updateMusicButtonIcon();
         }
+        
+        // Loading screen music toggle
+        const loadingMusicToggle = document.getElementById('loading-music-toggle');
+        if (loadingMusicToggle) {
+            loadingMusicToggle.addEventListener('click', toggleMusic);
+        }
+        
+        updateMusicButtonIcons();
     });
 
     // Ensure the audio state is tracked properly
-    audioElement.addEventListener('play', () => {
-        isPlaying = true;
-        updateMusicButtonIcon();
-    });
+    if (audioElement) {
+        audioElement.addEventListener('play', () => {
+            isPlaying = true;
+            updateMusicButtonIcons();
+        });
 
-    audioElement.addEventListener('pause', () => {
-        isPlaying = false;
-        updateMusicButtonIcon();
-    });
+        audioElement.addEventListener('pause', () => {
+            isPlaying = false;
+            updateMusicButtonIcons();
+        });
+    }
 }
 
 // Toggle music playback
@@ -46,38 +58,46 @@ export function toggleMusic() {
     }
     
     isPlaying = !isPlaying;
-    updateMusicButtonIcon();
+    updateMusicButtonIcons();
 }
 
-// Update the music button icon based on playing state
-function updateMusicButtonIcon() {
+// Update all music button icons based on playing state
+function updateMusicButtonIcons() {
+    // Update main screen icon
     const musicIcon = document.getElementById('music-icon');
-    if (!musicIcon) return;
-    
-    if (isPlaying) {
-        musicIcon.className = 'fa-solid fa-volume-high';
-    } else {
-        musicIcon.className = 'fa-solid fa-volume-xmark';
+    if (musicIcon) {
+        musicIcon.className = isPlaying ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
     }
     
-    // Add visual cue for active state
+    // Update loading screen icon
+    const loadingMusicIcon = document.getElementById('loading-music-icon');
+    if (loadingMusicIcon) {
+        loadingMusicIcon.className = isPlaying ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+    }
+    
+    // Style main screen button
     const musicToggle = document.getElementById('music-toggle');
-    if (musicToggle) {
-        if (isPlaying) {
-            musicToggle.style.backgroundColor = '#4f6b8f';
-            musicToggle.style.borderColor = 'rgba(114, 137, 218, 0.5)';
-            musicToggle.style.color = 'white';
-            
-            // Add subtle pulsing animation
-            musicToggle.style.animation = 'pulse 2s infinite';
-        } else {
-            musicToggle.style.backgroundColor = '#2a3142';
-            musicToggle.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-            musicToggle.style.color = '#eaeaea';
-            
-            // Remove animation
-            musicToggle.style.animation = 'none';
-        }
+    updateButtonStyle(musicToggle);
+    
+    // Style loading screen button
+    const loadingMusicToggle = document.getElementById('loading-music-toggle');
+    updateButtonStyle(loadingMusicToggle);
+}
+
+// Style the music toggle button based on play state
+function updateButtonStyle(button) {
+    if (!button) return;
+    
+    if (isPlaying) {
+        button.style.backgroundColor = '#4f6b8f';
+        button.style.borderColor = 'rgba(114, 137, 218, 0.5)';
+        button.style.color = 'white';
+        button.style.animation = 'pulse 2s infinite';
+    } else {
+        button.style.backgroundColor = '#2a3142';
+        button.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+        button.style.color = '#eaeaea';
+        button.style.animation = 'none';
     }
 }
 

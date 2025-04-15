@@ -129,8 +129,15 @@
 .scrollable-content {
     flex: 1;
     overflow-y: auto;
-    padding-right: 5px; /* Add some padding for scrollbar */
-    scrollbar-width: thin;
+    padding: 0 0 0 0;
+    border-radius: 10px;
+    background-color: rgba(30, 33, 38, 0.3);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 0;
+    min-height: 0;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Make content within panels fit properly */
@@ -138,7 +145,14 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    min-height: 0; /* Important for flex children to shrink properly */
+    min-height: 0;
+    background-color: #262a33;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin: 0;
+    padding: 0;
 }
 
 .cv-embed {
@@ -146,9 +160,39 @@
     min-height: 0; /* Allow PDF to shrink if needed */
 }
 
-.event-logs {
+.event-logs-container {
+    width: 100%;
     height: 100%;
     overflow-y: auto;
+    border-radius: 10px;
+    background-color: rgba(42, 49, 66, 0.2);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 0;
+    padding: 0 0 0 0;
+    min-height: 0;
+}
+
+.event-logs {
+    font-family: 'Consolas', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #d8dce6;
+}
+
+.log-entry {
+    padding: 10px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    word-break: break-word;
+    margin-bottom: 5px;
+    border-radius: 6px;
+}
+
+.log-entry:nth-child(odd) {
+    background-color: rgba(42, 49, 66, 0.4);
+}
+
+.log-entry:last-child {
+    border-bottom: none;
 }
 
 /* For scrollbars in panels */
@@ -256,27 +300,7 @@
     right: auto;
 }
 
-/* Event Logs Panel Styling */
-.event-logs {
-    font-family: 'Consolas', monospace;
-    font-size: 13px;
-    line-height: 1.5;
-    color: #d8dce6;
-}
-
-.log-entry {
-    padding: 10px 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    word-break: break-word;
-    margin-bottom: 5px;
-    border-radius: 6px;
-}
-
-.log-entry:nth-child(odd) {
-    background-color: rgba(42, 49, 66, 0.4);
-}
-
-/* Text Analysis Panel Styling */
+/* Text Analysis Panel improved styling */
 .text-analysis-container {
     display: flex;
     flex-direction: column;
@@ -290,6 +314,8 @@
     border-radius: 10px;
     padding: 15px;
     margin-bottom: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .input-section {
@@ -516,6 +542,9 @@
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin: 0;
+    padding: 0;
 }
 
 .cv-embed {
@@ -611,7 +640,8 @@ embed.cv-embed:not([src]) + .cv-fallback {
 .footer-section {
     width: 100%;
     display: flex;
-    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
     margin-top: 20px;
     background-color: rgba(30, 33, 38, 0.7);
     border-radius: 15px;

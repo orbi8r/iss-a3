@@ -109,21 +109,21 @@ The project follows a modular architecture with separate concerns:
 - ✅ Include your profile picture and local pictures from your birthplace.
 - ✅ Write about your education background, schools, and achievements.
 - ✅ List your technical skills based on your level of expertise.
-- ❌ Include a CV as a PDF in a hyperlink.
+- ✅ Include a CV as a PDF in a hyperlink.
 
 #### Q2: JavaScript Event Tracking
-- ❌ Write a JavaScript function to capture all click events and page views.
-- ❌ Print the output in the console with the format: `Timestamp_of_click, type of event (click/view), event object (drop-down, image, text, etc.)`.
+- ✅ Write a JavaScript function to capture all click events and page views.
+- ✅ Print the output in the console with the format: `Timestamp_of_click, type of event (click/view), event object (drop-down, image, text, etc.)`.
 
 #### Q3: Text Analysis
-- ❌ Create a text box to input more than 10,000 words.
-- ❌ Calculate and display:
+- ✅ Create a text box to input more than 10,000 words.
+- ✅ Calculate and display:
   - Number of letters
   - Number of words
   - Number of spaces
   - Number of newlines
   - Number of special symbols
-- ❌ Tokenize the text and print:
+- ✅ Tokenize the text and print:
   - Count of pronouns grouped by pronouns
   - Count of prepositions grouped by prepositions
   - Count of indefinite articles grouped by articles

@@ -1,6 +1,40 @@
 // Loading screen functionality
 import { toggleMusic } from './audio.js';
 
+// Initialize loading screen components
+document.addEventListener('DOMContentLoaded', function() {
+    // Get loading screen elements
+    const loadingScreen = document.getElementById('loading-screen');
+    const progressBar = document.getElementById('progress-bar');
+    const loadingText = document.getElementById('loading-text');
+    const musicPanel = document.querySelector('.footer-music-loading');
+    
+    // Initialize loading animations
+    startLoadingAnimation();
+});
+
+// Simulate loading progress before extraction begins
+function startLoadingAnimation() {
+    // Show initial loading state
+    const progressBar = document.getElementById('progress-bar');
+    const loadingText = document.getElementById('loading-text');
+    
+    // Set random initial progress just to show animation
+    let progress = 0;
+    progressBar.style.width = `${progress}%`;
+    loadingText.textContent = `${progress}% Complete`;
+    
+    // Update the loading EST with a placeholder
+    document.getElementById('loading-est').textContent = 'EST: --:--';
+    
+    // Add pulse animation to loading elements
+    const loadingContent = document.querySelector('.loading-content');
+    loadingContent.style.animation = 'pulse 2s infinite';
+}
+
+// Export functions
+export { startLoadingAnimation };
+
 export function initLoadingScreen(onStartCallback) {
     // Create start button for user interaction
     const startButton = document.createElement('button');

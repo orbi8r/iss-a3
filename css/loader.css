@@ -31,6 +31,7 @@
     justify-content: space-between;
     align-items: center;
     margin-top: 10px;
+    width: 100%;
 }
 
 #loading-text {
@@ -42,14 +43,18 @@
     font-size: 1em;
     color: #a0a8c0;
     text-align: right;
+    font-weight: bold;
+    min-width: 80px;
+    margin-left: auto;
 }
 
 /* Footer music section for loading screen */
 .footer-music-loading {
     position: absolute;
     bottom: 30px;
-    transform: translateX(-50%);
     left: 50%;
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -59,7 +64,7 @@
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: all 0.6s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+    transition: transform 0.7s cubic-bezier(0.68, -0.6, 0.32, 1.6), opacity 0.7s cubic-bezier(0.68, -0.6, 0.32, 1.6);
     width: auto;
     z-index: 1001;
 }
@@ -81,9 +86,19 @@
 
 /* Animate music panel when app loads */
 .footer-music-loading.animate-to-main {
-    transform: translate(calc(50vw - 150px), 0);
-    bottom: 30px;
+    transform: translateX(200%) scale(0.7);
     opacity: 0;
+    pointer-events: none;
+}
+
+/* Ensure main footer is hidden initially and fades in */
+#app-container .footer-section {
+    opacity: 0;
+    transition: opacity 0.7s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+}
+
+#app-container .footer-section.visible {
+    opacity: 1;
 }
 
 /* Loading animation */
@@ -322,9 +337,9 @@
 	border: none;
 	padding: 15px 30px;
 	font-size: 18px;
-	margin: 20px auto;
+	margin: 20px auto 0;
 	cursor: pointer;
-	border-radius: 5px;
+	border-radius: 10px;
 	display: block;
 	transition: all 0.3s ease;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -338,6 +353,12 @@
 
 .start-button:active {
 	transform: scale(0.98);
+}
+
+/* Add hover effect to loading screen elements */
+.loading-content, .footer-music-loading {
+	transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+	transform-style: preserve-3d;
 }
 
 /* Version counter */

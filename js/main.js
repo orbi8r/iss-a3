@@ -222,12 +222,14 @@ function initControls() {
     frameSlider.max = totalFrames;
     frameSlider.value = 1;
     
-    // Add event listeners
+    // Add event listener for slider
     frameSlider.addEventListener('input', handleSliderChange);
-    prevBtn.addEventListener('click', prevFrame);
-    nextBtn.addEventListener('click', nextFrame);
     
-    // Add keyboard support
+    // Initialize slideshow with the frames we've extracted
+    // This will set up the advanced button handlers with hold functionality
+    initSlideshow(frames);
+    
+    // Add keyboard support for simple navigation
     document.addEventListener('keydown', handleKeyboardNavigation);
     
     // Initialize scroll controls with panel-specific behavior
@@ -264,12 +266,12 @@ function initScrollBehavior() {
             event.preventDefault();
             targetPanel.scrollTop += event.deltaY;
         } else {
-            // If not over a panel, control the slideshow
+            // If not over a panel, use the slideshow.js navigation (which has infinite loop functionality)
             event.preventDefault();
             if (event.deltaY > 0) {
-                nextFrame();
+                nextImage(); // Use slideshow.js function for consistent infinite scrolling
             } else {
-                prevFrame();
+                prevImage(); // Use slideshow.js function for consistent infinite scrolling
             }
         }
     }, { passive: false });
@@ -298,16 +300,22 @@ function displayFrame(frameIndex) {
 function prevFrame() {
     if (currentFrame > 1) {
         currentFrame--;
-        displayFrame(currentFrame);
+    } else {
+        // Loop to the last frame if at the first frame
+        currentFrame = totalFrames;
     }
+    displayFrame(currentFrame);
 }
 
 // Go to the next frame
 function nextFrame() {
     if (currentFrame < totalFrames) {
         currentFrame++;
-        displayFrame(currentFrame);
+    } else {
+        // Loop to the first frame if at the last frame
+        currentFrame = 1;
     }
+    displayFrame(currentFrame);
 }
 
 // Handle keyboard navigation with arrow keys

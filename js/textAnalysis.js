@@ -114,16 +114,20 @@ function analyzeText(text) {
     const prepositionCounts = {};
     const articleCounts = {};
     
+    // Create a flat set of all pronouns for efficient lookup
+    const allPronouns = new Set();
+    Object.values(textAnalysisLists.pronouns).forEach(pronounList => {
+        pronounList.forEach(pronoun => allPronouns.add(pronoun));
+    });
+    
     // Process each token (case-insensitive)
     tokens.forEach(token => {
         // Skip empty tokens
         if (!token) return;
         
-        // Check pronouns
-        for (const [type, pronounsList] of Object.entries(textAnalysisLists.pronouns)) {
-            if (pronounsList.includes(token)) {
-                pronounCounts[token] = (pronounCounts[token] || 0) + 1;
-            }
+        // Check pronouns - only count each word once regardless of how many pronoun categories it's in
+        if (allPronouns.has(token)) {
+            pronounCounts[token] = (pronounCounts[token] || 0) + 1;
         }
         
         // Check simple prepositions

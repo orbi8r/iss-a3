@@ -200,16 +200,8 @@ body {
     margin-left: 15px;
 }
 
-/* Event logs container */
-.event-logs-container {
-    width: 100%;
-    height: 100%;
-    overflow-y: auto;
-    padding: 10px;
-    border-radius: 10px;
-    background-color: rgba(42, 49, 66, 0.2);
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
-}
+/* Event logs container - moved to panels.css for better organization */
+/* .event-logs-container styling now managed in panels.css */
 
 /* Scrollbar styling for a clean look */
 ::-webkit-scrollbar {

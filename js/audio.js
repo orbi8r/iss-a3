@@ -245,8 +245,6 @@ function startWholesomeMessageRotation() {
         const randomIndex = Math.floor(Math.random() * wholesomeMessages.length);
         const message = wholesomeMessages[randomIndex];
         
-        console.log("Changing wholesome message to:", message);
-        
         // Update in main panel
         const mainCopyright = document.querySelector('#app-container .copyright-info');
         if (mainCopyright) {
@@ -266,14 +264,6 @@ function startWholesomeMessageRotation() {
     // Initial update
     updateMessages();
     
-    // Make sure to call startWholesomeMessageRotation when the DOM is fully loaded
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            // Set up interval to change message every 5 seconds
-            setInterval(updateMessages, 5000);
-        });
-    } else {
-        // DOM already loaded, set up interval immediately
-        setInterval(updateMessages, 5000);
-    }
+    // Set up interval to change message every 5 seconds
+    setInterval(updateMessages, 5000);
 }

@@ -64,11 +64,6 @@ function updateConsolePanel() {
         if (!scrollableContent) {
             scrollableContent = document.createElement('div');
             scrollableContent.className = 'scrollable-content';
-            scrollableContent.style.display = 'flex';
-            scrollableContent.style.flexDirection = 'column';
-            scrollableContent.style.height = '100%';
-            scrollableContent.style.width = '100%';
-            scrollableContent.style.overflow = 'auto';
             consolePanel.appendChild(scrollableContent);
         }
         
@@ -77,25 +72,30 @@ function updateConsolePanel() {
         if (!logsContainer) {
             logsContainer = document.createElement('div');
             logsContainer.className = 'event-logs-container';
-            logsContainer.style.display = 'flex';
-            logsContainer.style.flexDirection = 'column';
-            logsContainer.style.height = '100%';
-            logsContainer.style.width = '100%';
             scrollableContent.appendChild(logsContainer);
         }
         
         // Create formatted HTML from logs
         const logsHtml = eventLogs.map(log => `<div class="log-entry">${log}</div>`).join('');
         
-        // Set innerHTML with explicit styles for the event-logs div
-        logsContainer.innerHTML = `<div class="event-logs" style="display: flex; flex-direction: column; width: 100%; height: 100%;">${logsHtml}</div>`;
+        // Set innerHTML directly to logsContainer
+        logsContainer.innerHTML = logsHtml;
         
-        // Explicitly set the consolePanel style to take full height
+        // Ensure consolePanel has full height
+        consolePanel.style.height = '100%';
         consolePanel.style.display = 'flex';
         consolePanel.style.flexDirection = 'column';
-        consolePanel.style.height = '100%';
-        consolePanel.style.width = '100%';
-        consolePanel.style.overflow = 'hidden';
+        
+        // Ensure scrollableContent fills panel
+        scrollableContent.style.flex = '1';
+        scrollableContent.style.display = 'flex';
+        scrollableContent.style.flexDirection = 'column';
+        scrollableContent.style.overflow = 'auto';
+        
+        // Ensure logsContainer fills scrollable area
+        logsContainer.style.width = '100%';
+        logsContainer.style.display = 'flex';
+        logsContainer.style.flexDirection = 'column';
         
         // Auto-scroll to bottom of logs
         scrollableContent.scrollTop = scrollableContent.scrollHeight;

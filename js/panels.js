@@ -36,6 +36,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     // If already active, do nothing (keep it open)
                     return;
                 } else {
+                    // Add transition class for animation
+                    content.classList.add('panel-transition');
+                    panel.classList.add('panel-transition');
+                    
                     // Activate this panel
                     header.classList.add('active');
                     content.classList.add('active');
@@ -43,8 +47,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Update scrollable contents
                     ensureScrollableContent(content);
+                    
+                    // Reset transition class after animation completes
+                    setTimeout(() => {
+                        content.classList.remove('panel-transition');
+                        panel.classList.remove('panel-transition');
+                    }, 600);
                 }
             } else {
+                // Add transition class for animation
+                if (content.classList.contains('active')) {
+                    content.classList.add('panel-transition');
+                    panel.classList.add('panel-transition');
+                    
+                    // Reset transition class after animation completes
+                    setTimeout(() => {
+                        content.classList.remove('panel-transition');
+                        panel.classList.remove('panel-transition');
+                    }, 600);
+                }
+                
                 // Deactivate all other panels
                 header.classList.remove('active');
                 content.classList.remove('active');

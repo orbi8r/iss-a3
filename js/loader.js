@@ -144,41 +144,49 @@ function showLoadingStuckWarning() {
 }
 
 export function initLoadingScreen(onStartCallback) {
+    // Clear any previous stuck timeout
+    if (loadingStuckTimeout) {
+        clearTimeout(loadingStuckTimeout);
+        loadingStuckTimeout = null;
+    }
+
+    // Reset loadingStarted flag
+    loadingStarted = false;
+
     // Create start button for user interaction
     const startButton = document.createElement('button');
     startButton.id = 'start-extraction-btn';
     startButton.textContent = 'Start Frame Extraction';
     startButton.classList.add('start-button');
     document.querySelector('.loading-content').appendChild(startButton);
-    
+
     startButton.addEventListener('click', function() {
         // Remove the button after click
         startButton.remove();
-        
+
         // Make sure the camera animation is displayed if it wasn't already
         if (!document.getElementById('loading-animation')) {
             createFilmStripAnimation();
         }
-        
+
         // Start the loading animation
         startLoadingAnimation();
-        
+
         // Ensure music starts playing when extraction begins
-        // This will use the already initialized audio player from main.js
         toggleMusic();
-        
+
         // Set a timeout to check if loading gets stuck at 0%
         loadingStarted = true;
         loadingStuckTimeout = setTimeout(() => {
             // Check if progress is still at 0%
             const progressBar = document.getElementById('progress-bar');
             const currentWidth = parseFloat(progressBar.style.width) || 0;
-            
+
             if (currentWidth === 0) {
                 showLoadingStuckWarning();
             }
         }, 10000); // Check after 10 seconds
-        
+
         // Now we can load the video after user interaction
         if (onStartCallback) onStartCallback();
     });

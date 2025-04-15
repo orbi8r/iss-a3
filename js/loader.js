@@ -28,17 +28,14 @@ function startLoadingAnimation() {
     // Update the loading EST with a placeholder
     document.getElementById('loading-est').textContent = 'EST: --:--';
     
-    // Add pulse animation to loading text elements only (not blue rectangle)
-    const loadingContent = document.querySelector('.loading-content');
+    // Add pulse animation ONLY to the EST element, not other text elements
+    const loadingEst = document.getElementById('loading-est');
     
-    // Remove any existing animation before adding the new one
-    loadingContent.style.animation = '';
+    // Remove any existing animation from EST before adding the new one
+    loadingEst.style.animation = '';
     
-    // Only add the pulse effect to the text elements
-    const textElements = loadingContent.querySelectorAll('h2, #loading-text, #loading-est');
-    textElements.forEach(el => {
-        el.style.animation = 'pulse 2s infinite';
-    });
+    // Only add the pulse effect to the EST element
+    loadingEst.style.animation = 'pulse 2s infinite';
 }
 
 // Export functions

@@ -1,10 +1,23 @@
 // Event tracking functionality (Q2)
 let eventLogs = [];
 
+// Function to track wholesome message changes
+export function updateWholesomeMessage(message) {
+    logEvent('message_change', { type: 'wholesome', content: message });
+}
+
 // Function to log events to both console and panel
 function logEvent(type, target) {
     const timestamp = new Date().toISOString();
-    const targetType = getElementType(target);
+    let targetType;
+    
+    // Handle when target is an object with custom data
+    if (target && typeof target === 'object' && target.type) {
+        targetType = `${target.type}: ${target.content?.substring(0, 20)}...`;
+    } else {
+        targetType = getElementType(target);
+    }
+    
     const eventLog = `${timestamp}, ${type}, ${targetType}`;
     
     // Log to console

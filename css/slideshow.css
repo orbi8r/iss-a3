@@ -168,6 +168,35 @@
     font-size: 0.9em;
     text-align: right;
     margin-left: auto;
+    min-width: 200px; /* Ensure space for the wholesome message */
+}
+
+/* Wholesome message styling to match loader.css */
+.wholesome-message {
+    display: inline-block;
+    color: #7289da;
+    font-weight: 500;
+    transition: all 0.5s ease;
+    animation: message-fade 5s ease infinite;
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+/* Animation for message transition */
+@keyframes message-fade {
+    0%, 20% {
+        opacity: 0.7;
+        transform: translateY(0);
+    }
+    5% {
+        opacity: 1;
+        transform: translateY(-2px);
+    }
+    80%, 100% {
+        opacity: 0.7;
+        transform: translateY(0);
+    }
 }
 
 /* Responsive design for different screens */

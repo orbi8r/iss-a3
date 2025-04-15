@@ -280,12 +280,12 @@ body {
 }
 
 /* Mouse hover effect for all interactive elements */
-.mouse-hover-effect, .panel, .content-frame, .scroll-control, .footer-section, .footer-music-loading {
+.mouse-hover-effect, .panel, .content-frame, .scroll-control, .footer-section {
     transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s;
     transform-style: preserve-3d;
 }
 
-.mouse-hover-effect:hover, .panel:hover, .content-frame:hover, .scroll-control:hover, .footer-section:hover, .footer-music-loading:hover {
+.mouse-hover-effect:hover, .panel:hover, .content-frame:hover, .scroll-control:hover, .footer-section:hover {
     transform: perspective(1000px) rotateX(var(--rotateX,0deg)) rotateY(var(--rotateY,0deg));
     box-shadow: 0 8px 30px rgba(114,137,218,0.15);
 }

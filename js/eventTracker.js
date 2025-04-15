@@ -66,8 +66,9 @@ function updateConsolePanel() {
             scrollableContent.className = 'scrollable-content';
             scrollableContent.style.display = 'flex';
             scrollableContent.style.flexDirection = 'column';
-            scrollableContent.style.flex = '1';
             scrollableContent.style.height = '100%';
+            scrollableContent.style.width = '100%';
+            scrollableContent.style.overflow = 'auto';
             consolePanel.appendChild(scrollableContent);
         }
         
@@ -78,8 +79,8 @@ function updateConsolePanel() {
             logsContainer.className = 'event-logs-container';
             logsContainer.style.display = 'flex';
             logsContainer.style.flexDirection = 'column';
-            logsContainer.style.flex = '1';
             logsContainer.style.height = '100%';
+            logsContainer.style.width = '100%';
             scrollableContent.appendChild(logsContainer);
         }
         
@@ -87,10 +88,17 @@ function updateConsolePanel() {
         const logsHtml = eventLogs.map(log => `<div class="log-entry">${log}</div>`).join('');
         
         // Set innerHTML with explicit styles for the event-logs div
-        logsContainer.innerHTML = `<div class="event-logs" style="display: flex; flex-direction: column; flex: 1; height: 100%;">${logsHtml}</div>`;
+        logsContainer.innerHTML = `<div class="event-logs" style="display: flex; flex-direction: column; width: 100%; height: 100%;">${logsHtml}</div>`;
+        
+        // Explicitly set the consolePanel style to take full height
+        consolePanel.style.display = 'flex';
+        consolePanel.style.flexDirection = 'column';
+        consolePanel.style.height = '100%';
+        consolePanel.style.width = '100%';
+        consolePanel.style.overflow = 'hidden';
         
         // Auto-scroll to bottom of logs
-        logsContainer.scrollTop = logsContainer.scrollHeight;
+        scrollableContent.scrollTop = scrollableContent.scrollHeight;
     }
 }
 

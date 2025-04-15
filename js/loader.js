@@ -62,6 +62,17 @@ export function updateLoadingProgress(framesLoaded, totalFrames) {
         clearTimeout(loadingStuckTimeout);
         loadingStuckTimeout = null;
     }
+    
+    // If progress is 0% and loading has started, check again after 10 seconds
+    if (progress === 0 && loadingStarted && !loadingStuckTimeout) {
+        loadingStuckTimeout = setTimeout(() => {
+            // Verify progress is still at 0%
+            const currentWidth = parseFloat(progressBar.style.width) || 0;
+            if (currentWidth === 0) {
+                showLoadingStuckWarning();
+            }
+        }, 10000);
+    }
 }
 
 // Function to create and display warning message

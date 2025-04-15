@@ -27,10 +27,10 @@ export function initSlideshow(frames) {
     initializeSlider(framesArray.length);
     
     // Preload all frames upfront
-    preloadAllFrames();
-    
-    // Show first frame
-    showImage(0);
+    preloadAllFrames().then(() => {
+        // Only show first frame after preloading is complete
+        showImage(0);
+    });
     
     // Set up event listeners
     setupEventListeners();
@@ -124,7 +124,7 @@ function preloadAllFrames() {
     }
     
     // Log when all images are fully loaded
-    Promise.all(imagePromises).then(() => {
+    return Promise.all(imagePromises).then(() => {
         console.log("All frames are fully preloaded and permanently kept in memory");
     });
 }

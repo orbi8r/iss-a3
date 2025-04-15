@@ -116,22 +116,6 @@ function extractFrames() {
     const extract = () => {
         // Set video to the current time
         const frameTime = (frameIndex / totalFrames) * video.duration;
-        
-        // Check for valid value before setting currentTime to avoid the non-finite error
-        if (!isFinite(frameTime) || isNaN(frameTime)) {
-            console.error('Invalid frame time calculated:', frameTime);
-            console.log('Debug info:', { frameIndex, totalFrames, duration: video.duration });
-            
-            // Skip this frame or use fallback value
-            frameIndex++;
-            if (frameIndex < totalFrames) {
-                setTimeout(extract, extractionInterval);
-            } else {
-                completeLoading();
-            }
-            return;
-        }
-        
         video.currentTime = frameTime;
         
         // Wait for the video to update to the new time

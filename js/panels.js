@@ -119,18 +119,32 @@ function initializeEventLogs() {
     const panel = document.getElementById('panel-content-1');
     if (!panel) return;
     
-    // Get or create scrollable container
-    let scrollableContent = panel.querySelector('.scrollable-content');
-    if (!scrollableContent) {
-        scrollableContent = document.createElement('div');
-        scrollableContent.className = 'scrollable-content';
-        panel.appendChild(scrollableContent);
-    }
+    // Clear any existing content
+    panel.innerHTML = '';
     
-    // Create a container for event logs with proper bounding
+    // Set explicit styles for the panel content
+    panel.style.display = 'flex';
+    panel.style.flexDirection = 'column';
+    panel.style.height = '100%';
+    panel.style.width = '100%';
+    panel.style.overflow = 'hidden';
+    
+    // Create an event logs title/header
+    const logsHeader = document.createElement('div');
+    logsHeader.className = 'logs-header';
+    logsHeader.style.marginBottom = '15px';
+    logsHeader.innerHTML = `
+        <h3 style="color: #eaeaea; margin: 0; font-size: 16px; font-weight: 500;">
+            <i class="fas fa-history" style="margin-right: 8px; color: #7289da;"></i>
+            Event History
+        </h3>
+    `;
+    panel.appendChild(logsHeader);
+    
+    // Create logs container
     const logsContainer = document.createElement('div');
-    logsContainer.className = 'event-logs-container';
-    scrollableContent.appendChild(logsContainer);
+    logsContainer.id = 'event-logs-container';
+    panel.appendChild(logsContainer);
 }
 
 // Initialize Text Analysis in Panel 3

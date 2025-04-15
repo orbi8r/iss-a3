@@ -57,49 +57,35 @@ function getElementType(element) {
 
 // Function to update the console panel with event logs
 function updateConsolePanel() {
-    const consolePanel = document.getElementById('panel-content-1');
-    if (consolePanel) {
-        // Get or create scrollable container
-        let scrollableContent = consolePanel.querySelector('.scrollable-content');
-        if (!scrollableContent) {
-            scrollableContent = document.createElement('div');
-            scrollableContent.className = 'scrollable-content';
-            consolePanel.appendChild(scrollableContent);
-        }
-        
-        // Get or create event logs container
-        let logsContainer = scrollableContent.querySelector('.event-logs-container');
-        if (!logsContainer) {
-            logsContainer = document.createElement('div');
-            logsContainer.className = 'event-logs-container';
-            scrollableContent.appendChild(logsContainer);
-        }
-        
-        // Create formatted HTML from logs
-        const logsHtml = eventLogs.map(log => `<div class="log-entry">${log}</div>`).join('');
-        
-        // Set innerHTML directly to logsContainer
-        logsContainer.innerHTML = logsHtml;
-        
-        // Ensure consolePanel has full height
-        consolePanel.style.height = '100%';
-        consolePanel.style.display = 'flex';
-        consolePanel.style.flexDirection = 'column';
-        
-        // Ensure scrollableContent fills panel
-        scrollableContent.style.flex = '1';
-        scrollableContent.style.display = 'flex';
-        scrollableContent.style.flexDirection = 'column';
-        scrollableContent.style.overflow = 'auto';
-        
-        // Ensure logsContainer fills scrollable area
-        logsContainer.style.width = '100%';
-        logsContainer.style.display = 'flex';
-        logsContainer.style.flexDirection = 'column';
-        
-        // Auto-scroll to bottom of logs
-        scrollableContent.scrollTop = scrollableContent.scrollHeight;
-    }
+    const logsContainer = document.getElementById('event-logs-container');
+    if (!logsContainer) return;
+    
+    // Create formatted HTML from logs
+    const logsHtml = eventLogs.map(log => {
+        return `<div class="log-entry" style="
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            background-color: rgba(42, 49, 66, 0.4);
+            border-radius: 6px;
+            border-left: 3px solid #4f6b8f;
+            font-family: 'Consolas', monospace;
+            font-size: 13px;
+            color: #d8dce6;
+            word-break: break-word;
+            width: 100%;
+            box-sizing: border-box;
+        ">${log}</div>`;
+    }).join('');
+    
+    // Set container content
+    logsContainer.innerHTML = logsHtml;
+    
+    // Force layout calculation before scrolling
+    // This ensures the scrollHeight is correctly calculated
+    logsContainer.getBoundingClientRect();
+    
+    // Auto-scroll to bottom of logs
+    logsContainer.scrollTop = logsContainer.scrollHeight;
 }
 
 // Set up event listeners

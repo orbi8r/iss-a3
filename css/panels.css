@@ -24,6 +24,39 @@
     margin-bottom: 10px;
     flex: 0;
     min-width: 0; /* Ensure panel can shrink if needed */
+    transform: translateY(50px);
+    opacity: 0;
+    animation: panel-entrance 0.8s forwards;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.panel:nth-child(1) { animation-delay: 0.1s; }
+.panel:nth-child(2) { animation-delay: 0.3s; }
+.panel:nth-child(3) { animation-delay: 0.5s; }
+
+@keyframes panel-entrance {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Hover effect based on mouse position */
+.panel {
+    transition: transform 0.3s ease-out;
+    transform-style: preserve-3d;
+}
+
+.panel:hover {
+    transform: perspective(1000px) rotateX(var(--rotateX)) rotateY(var(--rotateY));
+    box-shadow: 
+        calc(var(--rotateY) * -1px) 
+        calc(var(--rotateX) * 1px) 
+        20px rgba(0,0,0,0.3);
 }
 
 .panel.active {
@@ -85,11 +118,19 @@
 
 .panel-content.active {
     height: calc(100% - 60px);
-    overflow-y: auto;
+    overflow-y: hidden; /* Changed from auto to hidden - individual elements will scroll */
     overflow-x: hidden; /* Prevent horizontal scrolling in content */
     padding: 20px;
     display: flex;
     flex-direction: column;
+}
+
+/* Individual scrollable content areas */
+.scrollable-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 5px; /* Add some padding for scrollbar */
+    scrollbar-width: thin;
 }
 
 /* Make content within panels fit properly */
@@ -185,7 +226,7 @@
 
 /* Music toggle button */
 .music-toggle {
-    position: fixed;
+    position: relative;
     z-index: 999;
     width: 40px;
     height: 40px;
@@ -208,28 +249,27 @@
     background-color: #343d52;
 }
 
-#loading-screen .music-toggle {
-    top: 20px;
-    right: 20px;
-}
-
+/* Remove fixed positioning from music toggle */
 #app-container .music-toggle {
-    top: 20px;
-    right: 20px;
+    position: relative;
+    top: auto;
+    right: auto;
 }
 
 /* Event Logs Panel Styling */
 .event-logs {
     font-family: 'Consolas', monospace;
-    font-size: 12px;
-    line-height: 1.4;
-    color: #ccc;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #d8dce6;
 }
 
 .log-entry {
-    padding: 6px 10px;
+    padding: 10px 15px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     word-break: break-word;
+    margin-bottom: 5px;
+    border-radius: 6px;
 }
 
 .log-entry:nth-child(odd) {
@@ -249,7 +289,7 @@
     background-color: #262a33;
     border-radius: 10px;
     padding: 15px;
-    overflow: hidden;
+    margin-bottom: 10px;
 }
 
 .input-section {
@@ -260,6 +300,9 @@
     flex: 1 1 auto;
     overflow-y: auto;
     min-height: 200px;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .input-instructions {
@@ -481,6 +524,63 @@
     min-height: 0; /* Allow PDF to shrink if needed */
 }
 
+/* Improved CV embedded text styling */
+.cv-text {
+    padding: 20px;
+    color: #e2e6f0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    letter-spacing: 0.3px;
+}
+
+.cv-text h1, .cv-text h2, .cv-text h3 {
+    color: #a0b6ff;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.cv-text h1 {
+    font-size: 24px;
+    border-bottom: 1px solid rgba(160, 182, 255, 0.3);
+    padding-bottom: 8px;
+}
+
+.cv-text h2 {
+    font-size: 20px;
+    color: #94a7db;
+}
+
+.cv-text h3 {
+    font-size: 16px;
+    color: #7289da;
+}
+
+.cv-text p {
+    margin-bottom: 15px;
+}
+
+.cv-text ul, .cv-text ol {
+    margin-bottom: 15px;
+    padding-left: 20px;
+}
+
+.cv-text li {
+    margin-bottom: 5px;
+}
+
+.cv-text a {
+    color: #7289da;
+    text-decoration: none;
+    border-bottom: 1px dotted #7289da;
+    transition: all 0.2s ease;
+}
+
+.cv-text a:hover {
+    color: #a0b6ff;
+    border-bottom: 1px solid #a0b6ff;
+}
+
 .cv-fallback {
     display: none;
     padding: 20px;
@@ -505,4 +605,61 @@ embed.cv-embed:not([src]) + .cv-fallback {
         width: 100%;
         justify-content: center;
     }
+}
+
+/* Footer section redesign */
+.footer-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    background-color: rgba(30, 33, 38, 0.7);
+    border-radius: 15px;
+    padding: 15px 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transform: translateY(50px);
+    opacity: 0;
+    animation: footer-entrance 0.8s forwards 0.7s;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes footer-entrance {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.music-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.copyright-info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 15px;
+    font-size: 0.8em;
+    color: #a0a8c0;
+}
+
+/* Mouse hover effect */
+.mouse-hover-effect {
+    transition: transform 0.3s ease-out;
+    transform-style: preserve-3d;
+}
+
+.mouse-hover-effect:hover {
+    transform: perspective(1000px) rotateX(var(--rotateX)) rotateY(var(--rotateY));
+    box-shadow: 
+        calc(var(--rotateY) * -1px) 
+        calc(var(--rotateX) * 1px) 
+        20px rgba(0,0,0,0.3);
 }

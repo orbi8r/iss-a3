@@ -38,6 +38,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     header.classList.add('active');
                     content.classList.add('active');
                     panel.classList.add('active');
+                    
+                    // Make sure panel content has scrollable-content wrapper
+                    ensureScrollableContent(content);
                 }
             } else {
                 // Deactivate all other panels
@@ -48,9 +51,38 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Initial setup of scrollable wrappers
+    setupScrollableContent();
+    
     // Embed CV in Panel 2
     loadCV();
 });
+
+// Make sure all active panels have scrollable-content wrappers
+function setupScrollableContent() {
+    const activeContents = document.querySelectorAll('.panel-content.active');
+    activeContents.forEach(content => {
+        ensureScrollableContent(content);
+    });
+}
+
+// Ensure panel content has scrollable wrapper
+function ensureScrollableContent(panelContent) {
+    // Check if the panel already has a scrollable-content wrapper
+    if (!panelContent.querySelector('.scrollable-content')) {
+        // Create a scrollable wrapper
+        const scrollableWrapper = document.createElement('div');
+        scrollableWrapper.className = 'scrollable-content';
+        
+        // Move all existing children to the wrapper
+        while (panelContent.firstChild) {
+            scrollableWrapper.appendChild(panelContent.firstChild);
+        }
+        
+        // Add the wrapper to the panel content
+        panelContent.appendChild(scrollableWrapper);
+    }
+}
 
 // Function to load CV into panel 2
 function loadCV() {
@@ -98,5 +130,12 @@ function loadCV() {
     
     cvPreview.appendChild(embedWrapper);
     cvContainer.appendChild(cvPreview);
-    cvPanel.appendChild(cvContainer);
+    
+    // Find the scrollable-content wrapper or create one
+    let scrollableContent = cvPanel.querySelector('.scrollable-content');
+    if (scrollableContent) {
+        scrollableContent.appendChild(cvContainer);
+    } else {
+        cvPanel.appendChild(cvContainer);
+    }
 }

@@ -44,9 +44,20 @@ function getElementType(element) {
 function updateConsolePanel() {
     const consolePanel = document.getElementById('panel-content-1');
     if (consolePanel) {
+        // Get or create scrollable container
+        let scrollableContent = consolePanel.querySelector('.scrollable-content');
+        if (!scrollableContent) {
+            scrollableContent = document.createElement('div');
+            scrollableContent.className = 'scrollable-content';
+            consolePanel.appendChild(scrollableContent);
+        }
+        
         // Create formatted HTML from logs
         const logsHtml = eventLogs.map(log => `<div class="log-entry">${log}</div>`).join('');
-        consolePanel.innerHTML = `<div class="event-logs">${logsHtml}</div>`;
+        scrollableContent.innerHTML = `<div class="event-logs">${logsHtml}</div>`;
+        
+        // Auto-scroll to bottom of logs
+        scrollableContent.scrollTop = scrollableContent.scrollHeight;
     }
 }
 
@@ -58,6 +69,25 @@ document.addEventListener('DOMContentLoaded', function() {
     // Track all clicks
     document.addEventListener('click', function(event) {
         logEvent('click', event.target);
+    });
+    
+    // Track scroll events on panels
+    document.addEventListener('wheel', function(event) {
+        const target = event.target.closest('.scrollable-content');
+        if (target) {
+            logEvent('scroll', target);
+        }
+    });
+    
+    // Track mouse movement for hover effects
+    let lastLogTime = 0;
+    document.addEventListener('mousemove', function(event) {
+        // Throttle logging to once per second to avoid flooding logs
+        const now = Date.now();
+        if (now - lastLogTime > 1000) {
+            logEvent('mousemove', event.target);
+            lastLogTime = now;
+        }
     });
 });
 

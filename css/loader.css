@@ -25,6 +25,67 @@
     letter-spacing: 1px;
 }
 
+/* Loading info with EST time */
+.loading-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+#loading-text {
+    font-size: 1.2em;
+    color: #eaeaea;
+}
+
+#loading-est {
+    font-size: 1em;
+    color: #a0a8c0;
+    text-align: right;
+}
+
+/* Footer music section for loading screen */
+.footer-music-loading {
+    position: absolute;
+    bottom: 30px;
+    transform: translateX(-50%);
+    left: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(30, 33, 38, 0.7);
+    border-radius: 15px;
+    padding: 10px 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.6s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+    width: auto;
+    z-index: 1001;
+}
+
+/* Music controls in loading screen */
+.footer-music-loading .music-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.footer-music-loading .copyright-info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 15px;
+    font-size: 0.8em;
+    color: #a0a8c0;
+}
+
+/* Animate music panel when app loads */
+.footer-music-loading.animate-to-main {
+    transform: translate(calc(50vw - 150px), 0);
+    bottom: 30px;
+    opacity: 0;
+}
+
 /* Loading animation */
 #loading-animation {
 	width: 150px;

@@ -239,6 +239,14 @@ function initTextAnalysis() {
     const textAnalysisPanel = document.getElementById('panel-content-3');
     if (!textAnalysisPanel) return;
     
+    // Get or create scrollable container
+    let scrollableContent = textAnalysisPanel.querySelector('.scrollable-content');
+    if (!scrollableContent) {
+        scrollableContent = document.createElement('div');
+        scrollableContent.className = 'scrollable-content';
+        textAnalysisPanel.appendChild(scrollableContent);
+    }
+    
     // Create UI elements with improved UI
     const analysisUI = `
         <div class="text-analysis-container">
@@ -261,8 +269,8 @@ function initTextAnalysis() {
         </div>
     `;
     
-    // Add UI to panel
-    textAnalysisPanel.innerHTML = analysisUI;
+    // Add UI to scrollable panel
+    scrollableContent.innerHTML = analysisUI;
     
     // Add event listener to the analyze button
     document.getElementById('analyze-button').addEventListener('click', function() {
@@ -278,6 +286,12 @@ function initTextAnalysis() {
         
         // Display the results
         document.getElementById('analysis-results').innerHTML = generateAnalysisHTML(analysis);
+        
+        // Ensure scrolling to see results
+        const resultsSection = document.getElementById('analysis-results');
+        if (resultsSection) {
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     });
     
     // Add event listener to the clear button

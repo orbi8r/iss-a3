@@ -1,4 +1,6 @@
 // Panels functionality for expandable left sidebar
+import { initTextAnalysis } from './textAnalysis.js';
+
 document.addEventListener('DOMContentLoaded', function() {
     // Get all panel elements
     const panels = document.querySelectorAll('.panel');
@@ -111,12 +113,8 @@ function initializeEventLogs() {
 
 // Initialize Text Analysis in Panel 3
 function initializeTextAnalysis() {
-    // This is handled by textAnalysis.js
-    // We're just ensuring the panel structure is correct
-    const panel = document.getElementById('panel-content-3');
-    if (!panel) return;
-    
-    ensureScrollableContent(panel);
+    // Call the imported initTextAnalysis function from textAnalysis.js
+    initTextAnalysis();
 }
 
 // Function to load CV into panel 2
@@ -141,7 +139,7 @@ function loadCV() {
     cvPreview.className = 'cv-preview';
     cvPreview.innerHTML = `
         <div class="cv-header">
-            <h3>Curriculum Vitae</h3>
+            <h3><a href="./resume/resume.pdf" target="_blank" class="cv-title-link">Curriculum Vitae</a></h3>
             <a href="./resume/resume.pdf" target="_blank" class="full-screen-link">
                 <i class="fas fa-expand"></i> View Full Screen
             </a>

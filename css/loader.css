@@ -56,7 +56,7 @@
     transform: translateX(-50%) scale(1);
     opacity: 1;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     background-color: rgba(30, 33, 38, 0.7);
     border-radius: 15px;
@@ -64,7 +64,7 @@
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: transform 0.7s cubic-bezier(0.68, -0.6, 0.32, 1.6), opacity 0.7s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+    transition: opacity 0.7s cubic-bezier(0.68, -0.6, 0.32, 1.6);
     width: auto;
     z-index: 1001;
 }
@@ -74,14 +74,16 @@
     display: flex;
     align-items: center;
     gap: 15px;
+    margin-right: auto;
 }
 
 .footer-music-loading .copyright-info {
     display: flex;
     flex-direction: column;
-    margin-left: 15px;
+    margin-left: auto;
     font-size: 0.8em;
     color: #a0a8c0;
+    text-align: right;
 }
 
 /* Animate music panel when app loads */
@@ -356,7 +358,7 @@
 }
 
 /* Add hover effect to loading screen elements */
-.loading-content, .footer-music-loading {
+.loading-content {
 	transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
 	transform-style: preserve-3d;
 }

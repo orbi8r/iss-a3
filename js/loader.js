@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadingText = document.getElementById('loading-text');
     const musicPanel = document.querySelector('.footer-music-loading');
     
-    // Initialize loading animations
+    // Initialize loading animations with camera animation
+    createFilmStripAnimation(); // Bring back the camera animation
     startLoadingAnimation();
 });
 
@@ -27,13 +28,34 @@ function startLoadingAnimation() {
     // Update the loading EST with a placeholder
     document.getElementById('loading-est').textContent = 'EST: --:--';
     
-    // Add pulse animation to loading elements
+    // Add pulse animation to loading text elements only (not blue rectangle)
     const loadingContent = document.querySelector('.loading-content');
-    loadingContent.style.animation = 'pulse 2s infinite';
+    
+    // Remove any existing animation before adding the new one
+    loadingContent.style.animation = '';
+    
+    // Only add the pulse effect to the text elements
+    const textElements = loadingContent.querySelectorAll('h2, #loading-text, #loading-est');
+    textElements.forEach(el => {
+        el.style.animation = 'pulse 2s infinite';
+    });
 }
 
 // Export functions
 export { startLoadingAnimation };
+
+// Update the loading screen with frame information
+export function updateLoadingProgress(framesLoaded, totalFrames) {
+    const progress = Math.round((framesLoaded / totalFrames) * 100);
+    const progressBar = document.getElementById('progress-bar');
+    const loadingText = document.getElementById('loading-text');
+    
+    // Update progress bar
+    progressBar.style.width = `${progress}%`;
+    
+    // Update text to show both percentage and frame count
+    loadingText.textContent = `${progress}% Complete (${framesLoaded}/${totalFrames} frames)`;
+}
 
 export function initLoadingScreen(onStartCallback) {
     // Create start button for user interaction
@@ -46,6 +68,11 @@ export function initLoadingScreen(onStartCallback) {
     startButton.addEventListener('click', function() {
         // Remove the button after click
         startButton.remove();
+        
+        // Make sure the camera animation is displayed if it wasn't already
+        if (!document.getElementById('loading-animation')) {
+            createFilmStripAnimation();
+        }
         
         // Start the loading animation
         startLoadingAnimation();

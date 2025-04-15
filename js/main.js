@@ -1,6 +1,6 @@
 // Main application logic
 import { initSlideshow, showImage, prevImage, nextImage } from './slideshow.js';
-import { initLoadingScreen, startLoadingAnimation } from './loader.js';
+import { initLoadingScreen, startLoadingAnimation, updateLoadingProgress } from './loader.js';
 import { initAudioPlayer, toggleMusic } from './audio.js';
 import { initTextAnalysis } from './textAnalysis.js';
 // No need to explicitly import eventTracker as it sets up its own listeners on DOMContentLoaded
@@ -127,10 +127,11 @@ function extractFrames() {
             const frameDataUrl = canvas.toDataURL('image/jpeg', 0.8);
             frames.push(frameDataUrl);
             
-            // Update progress
+            // Update progress and show frame count
             const progress = Math.floor((frameIndex + 1) / totalFrames * 100);
-            document.getElementById('progress-bar').style.width = `${progress}%`;
-            document.getElementById('loading-text').textContent = `${progress}% Complete`;
+            
+            // Use the updateLoadingProgress function from loader.js
+            updateLoadingProgress(frameIndex + 1, totalFrames);
             
             // Estimate remaining time
             updateEstimatedTime(frameIndex, totalFrames);

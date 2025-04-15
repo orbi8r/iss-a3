@@ -46,6 +46,54 @@ function initializeSlider(frameCount) {
         const frameIndex = parseInt(this.value);
         showImage(frameIndex);
     });
+    
+    // Add keyboard event listeners for fast navigation
+    document.addEventListener('keydown', function(event) {
+        // Only process keyboard events when loading is complete
+        if (document.getElementById("loading-screen").style.display === "none") {
+            handleKeyboardNavigation(event);
+        }
+    });
+}
+
+// Handle keyboard navigation with support for holding keys
+let keyIsDown = {
+    ArrowLeft: false,
+    ArrowRight: false
+};
+let keyHoldTimer = null;
+
+function handleKeyboardNavigation(event) {
+    const key = event.key;
+    
+    // Only process arrow keys
+    if (key !== 'ArrowLeft' && key !== 'ArrowRight') return;
+    
+    // Prevent default to avoid scrolling page
+    event.preventDefault();
+    
+    // If key is already down, don't process again
+    if (keyIsDown[key]) return;
+    
+    // Mark key as down
+    keyIsDown[key] = true;
+    
+    // Initial frame change on key press
+    if (key === 'ArrowLeft') {
+        prevImage();
+    } else if (key === 'ArrowRight') {
+        nextImage();
+    }
+    
+    // Start hold timer for continuous playback
+    clearTimeout(keyHoldTimer);
+    keyHoldTimer = setTimeout(() => {
+        if (keyIsDown['ArrowLeft']) {
+            startPlayback(-1);
+        } else if (keyIsDown['ArrowRight']) {
+            startPlayback(1);
+        }
+    }, holdThreshold);
 }
 
 // Preload all frames upfront to ensure they're always available
@@ -83,8 +131,12 @@ function preloadAllFrames() {
 
 // Show a specific image
 export function showImage(index) {
-    // Add safety check for the bug at the end of the video
-    if (index < 0 || index >= framesArray.length) return;
+    // If we're at the edge of the frames, loop around when needed
+    if (index < 0) {
+        index = framesArray.length - 1; // Loop to end when going past the beginning
+    } else if (index >= framesArray.length) {
+        index = 0; // Loop to beginning when going past the end
+    }
     
     // Double check frame exists
     if (!framesArray[index]) {
@@ -112,20 +164,18 @@ export function showImage(index) {
 export function prevImage() {
     if (!framesArray.length) return;
     
-    let newIndex = currentIndex - 1;
-    if (newIndex < 0) newIndex = framesArray.length - 1;
-    
-    showImage(newIndex);
+    // Simply call showImage with the previous index
+    // The showImage function now handles looping properly
+    showImage(currentIndex - 1);
 }
 
 // Go to next image
 export function nextImage() {
     if (!framesArray.length) return;
     
-    let newIndex = currentIndex + 1;
-    if (newIndex >= framesArray.length) newIndex = 0;
-    
-    showImage(newIndex);
+    // Simply call showImage with the next index
+    // The showImage function now handles looping properly
+    showImage(currentIndex + 1);
 }
 
 // Start continuous playback - improved implementation using requestAnimationFrame for smoother playback
@@ -164,7 +214,14 @@ function startPlayback(direction) {
         playInterval = requestAnimationFrame(playbackFrame);
     }
     
-    // Start the animation loop
+    // Start the animation loop immediately with the first frame
+    if (direction === 1) {
+        nextImage();
+    } else {
+        prevImage();
+    }
+    
+    // Continue with subsequent frames via animation frame
     playInterval = requestAnimationFrame(playbackFrame);
     
     console.log(`Started ${direction === 1 ? 'forward' : 'backward'} playback at ${playbackFPS} fps`);
@@ -195,14 +252,8 @@ function clearHoldTimer() {
 
 // Set up event listeners for navigation
 function setupEventListeners() {
-    // Add keyboard controls
-    document.addEventListener("keydown", function(e) {
-        if (e.key === "ArrowLeft") {
-            prevImage();
-        } else if (e.key === "ArrowRight") {
-            nextImage();
-        }
-    });
+    // Remove the duplicate keydown event listener from here since we now handle it in initializeSlider
+    // with improved hold functionality
 
     // Add wheel/scroll event for frame navigation - restoring original behavior
     document.addEventListener("wheel", function(e) {
@@ -215,6 +266,18 @@ function setupEventListeners() {
             e.preventDefault(); // Prevent page scrolling
         }
     }, { passive: false });
+
+    // Add keyup event to handle releasing arrow keys
+    document.addEventListener("keyup", function(e) {
+        if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+            // Mark key as no longer down
+            keyIsDown[e.key] = false;
+            
+            // Stop any playback that was triggered by this key
+            stopPlayback();
+            clearTimeout(keyHoldTimer);
+        }
+    });
 
     // Event listeners for navigation buttons with mousedown/mouseup for continuous playback
     const prevButton = document.getElementById("prev");

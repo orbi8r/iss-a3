@@ -515,6 +515,25 @@
     font-weight: 500;
 }
 
+/* Style for the CV title link */
+.cv-title-link {
+    color: #7289da;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.cv-title-link:hover {
+    color: #a0b6ff;
+    text-decoration: underline;
+}
+
+.cv-header h3 {
+    color: #eaeaea;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+}
+
 .full-screen-link {
     display: inline-flex;
     align-items: center;

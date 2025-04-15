@@ -93,13 +93,45 @@ function handleMouseMove(e) {
 
 // Initialize the video extraction process
 function initVideoExtraction() {
-    // Set canvas dimensions to match video
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    // Make sure video is loaded and ready before proceeding
+    if (video.readyState < 2) { // HAVE_CURRENT_DATA or higher is needed
+        console.log("Video not ready yet, waiting for metadata to load...");
+        
+        video.addEventListener('loadeddata', function onVideoReady() {
+            console.log("Video data loaded successfully, proceeding with extraction");
+            video.removeEventListener('loadeddata', onVideoReady);
+            continueVideoExtraction();
+        });
+        
+        // Set a fallback timeout in case video loading takes too long
+        setTimeout(() => {
+            if (totalFrames === 0) {
+                console.log("Using fallback video duration calculation");
+                continueVideoExtraction();
+            }
+        }, 3000);
+        
+        return;
+    }
     
-    // Calculate total frames
+    continueVideoExtraction();
+}
+
+// Continue video extraction once video is ready
+function continueVideoExtraction() {
+    // Set canvas dimensions to match video
+    canvas.width = video.videoWidth || 640;  // Fallback width if not available
+    canvas.height = video.videoHeight || 360;  // Fallback height if not available
+    
+    // Calculate total frames - ensure we have valid numbers
     const fps = 30; // Assuming 30fps
-    totalFrames = Math.floor(video.duration * fps);
+    
+    // Ensure video duration is valid
+    const duration = isFinite(video.duration) && video.duration > 0 ? 
+                    video.duration : 60; // Fallback to 60 seconds if duration is invalid
+    
+    totalFrames = Math.max(1, Math.floor(duration * fps));
+    console.log(`Video duration: ${duration}s, Calculated ${totalFrames} frames at ${fps}fps`);
     
     // Update UI with total frames info
     document.getElementById('frame-counter').textContent = `Frame: 1/${totalFrames}`;

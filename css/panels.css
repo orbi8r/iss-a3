@@ -63,6 +63,8 @@
     flex: 1;
     min-height: 300px;
     max-height: calc(100vh - 200px);
+    display: flex;
+    flex-direction: column;
 }
 
 .panel:not(.active) {
@@ -123,6 +125,7 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
+    flex: 1;
 }
 
 /* Individual scrollable content areas */

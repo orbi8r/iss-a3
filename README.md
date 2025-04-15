@@ -1,9 +1,13 @@
 # Personal Portfolio
 
+**Live Website: [https://orbi8r.github.io/iss-a3/](https://orbi8r.github.io/iss-a3/)**
+
 Assignment 3, Intro to Software Systems - IIIT Hyderabad
 
 ## Project Overview
-This application showcases a personal portfolio with an intuitive, office-themed interface. Key features include:
+This application showcases a personal portfolio with an intuitive, office-themed interface. The video content was made using **Godot Engine** and **GDScript** Programming language, featuring an "About me" type of 3D tour in a virtual fictional office.
+
+Key features include:
 
 - Frame-by-frame content navigation
 - Modern UI with expandable, rounded side panels
@@ -16,9 +20,35 @@ This application showcases a personal portfolio with an intuitive, office-themed
 ## File Structure
 The project follows a modular architecture with separate concerns:
 
-### Main Files
-- `index.html` - Main entry point for the application
-- `README.md` - Project documentation (this file)
+```
+index.html             # Main entry point for the application
+LICENSE                # MIT License file
+README.md              # Project documentation (this file)
+css/
+    loader.css         # Loading screen styles
+    main.css           # Core application styles
+    panels.css         # Panel component styles
+    slideshow.css      # Content display styles
+    styles.css         # Additional styling
+js/
+    audio.js           # Background music functionality
+    eventTracker.js    # Event tracking system (Q2)
+    loader.js          # Loading screen functionality
+    main.js            # Core application logic
+    panels.js          # Side panel functionality
+    scripts.js         # Additional scripts
+    slideshow.js       # Frame navigation functionality
+    textAnalysis.js    # Text analysis functionality (Q3)
+music/
+    C418-HauntMuskie.mp3  # Background music
+resume/
+    resume.pdf         # CV for embedding in panel 2
+submission/
+    README.txt         # Submission notes
+    submission.txt     # Submission details
+video/
+    WebVideo.mp4       # Source video for the presentation (created with Godot Engine)
+```
 
 ### JavaScript Files
 - `js/main.js` - Core application logic
@@ -61,8 +91,9 @@ The project follows a modular architecture with separate concerns:
   - Panel header and content areas
 
 ### Media and Documents
-- `video/WebVideo.mp4` - Source frames for the presentation
+- `video/WebVideo.mp4` - Source frames for the presentation (created with Godot Engine and GDScript)
 - `resume/resume.pdf` - CV for embedding in panel 2
+- `music/C418-HauntMuskie.mp3` - Background music for the portfolio
 
 ## Interface Features
 

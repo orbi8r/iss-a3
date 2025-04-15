@@ -64,6 +64,10 @@ function updateConsolePanel() {
         if (!scrollableContent) {
             scrollableContent = document.createElement('div');
             scrollableContent.className = 'scrollable-content';
+            scrollableContent.style.display = 'flex';
+            scrollableContent.style.flexDirection = 'column';
+            scrollableContent.style.flex = '1';
+            scrollableContent.style.height = '100%';
             consolePanel.appendChild(scrollableContent);
         }
         
@@ -72,12 +76,18 @@ function updateConsolePanel() {
         if (!logsContainer) {
             logsContainer = document.createElement('div');
             logsContainer.className = 'event-logs-container';
+            logsContainer.style.display = 'flex';
+            logsContainer.style.flexDirection = 'column';
+            logsContainer.style.flex = '1';
+            logsContainer.style.height = '100%';
             scrollableContent.appendChild(logsContainer);
         }
         
         // Create formatted HTML from logs
         const logsHtml = eventLogs.map(log => `<div class="log-entry">${log}</div>`).join('');
-        logsContainer.innerHTML = `<div class="event-logs">${logsHtml}</div>`;
+        
+        // Set innerHTML with explicit styles for the event-logs div
+        logsContainer.innerHTML = `<div class="event-logs" style="display: flex; flex-direction: column; flex: 1; height: 100%;">${logsHtml}</div>`;
         
         // Auto-scroll to bottom of logs
         logsContainer.scrollTop = logsContainer.scrollHeight;

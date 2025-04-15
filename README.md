@@ -128,6 +128,7 @@ The project follows a modular architecture with separate concerns:
 
 ## Asset Credits
 - "Canonical Hologra Office" (https://skfb.ly/oTyAG) by Aeri is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+- "Haunt Muskie" by C418, from the album "148" - Used as background music with attribution to the artist.
 
 ## Project Checklist
 

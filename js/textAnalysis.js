@@ -119,19 +119,21 @@ function analyzeText(text) {
         // Skip empty tokens
         if (!token) return;
         
-        // Check pronouns
+        // Check pronouns (now case-insensitive)
         for (const [type, pronounsList] of Object.entries(textAnalysisLists.pronouns)) {
             if (pronounsList.includes(token)) {
+                // Always use the lowercase version for consistent counting
                 pronounCounts[token] = (pronounCounts[token] || 0) + 1;
+                break; // Once matched, no need to check other pronoun types
             }
         }
         
-        // Check simple prepositions
+        // Check simple prepositions (now case-insensitive)
         if (textAnalysisLists.prepositions.simple.includes(token)) {
             prepositionCounts[token] = (prepositionCounts[token] || 0) + 1;
         }
         
-        // Check indefinite articles
+        // Check indefinite articles (now case-insensitive)
         if (textAnalysisLists.indefiniteArticles.includes(token)) {
             articleCounts[token] = (articleCounts[token] || 0) + 1;
         }
@@ -140,7 +142,7 @@ function analyzeText(text) {
     // Check for compound prepositions in original text (case-insensitive)
     textAnalysisLists.prepositions.compound.forEach(compoundPrep => {
         const regex = new RegExp('\\b' + compoundPrep.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + '\\b', 'gi');
-        const matches = text.match(regex);
+        const matches = lowercaseText.match(regex);
         
         if (matches && matches.length > 0) {
             prepositionCounts[compoundPrep] = matches.length;
@@ -155,7 +157,7 @@ function analyzeText(text) {
     
     multiWordPronouns.forEach(pronoun => {
         const regex = new RegExp('\\b' + pronoun.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + '\\b', 'gi');
-        const matches = text.match(regex);
+        const matches = lowercaseText.match(regex);
         
         if (matches && matches.length > 0) {
             pronounCounts[pronoun] = matches.length;
